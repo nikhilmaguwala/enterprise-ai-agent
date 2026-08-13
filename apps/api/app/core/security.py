@@ -86,6 +86,32 @@ def permissions_for_roles(roles: list[str]) -> list[str]:
     return sorted(perms)
 
 
+def mint_access_token(
+    *,
+    organization_id: UUID | str,
+    actor_id: UUID | str,
+    roles: list[str],
+    email: str | None = None,
+    settings: Settings | None = None,
+    expires_minutes: int = 60 * 12,
+    token_use: str = "app",
+) -> str:
+    cfg = settings or get_settings()
+    now = datetime.now(UTC)
+    payload = {
+        "sub": str(actor_id),
+        "org_id": str(organization_id),
+        "roles": roles,
+        "email": email,
+        "iss": "enterprise-ai-dev",
+        "aud": cfg.oidc_audience,
+        "iat": int(now.timestamp()),
+        "exp": int((now + timedelta(minutes=expires_minutes)).timestamp()),
+        "token_use": token_use,
+    }
+    return jwt.encode(payload, cfg.dev_auth_secret, algorithm="HS256")
+
+
 def mint_dev_token(
     *,
     organization_id: UUID | str,
@@ -98,19 +124,15 @@ def mint_dev_token(
     cfg = settings or get_settings()
     if not cfg.dev_auth_enabled:
         raise RuntimeError("dev auth is disabled")
-    now = datetime.now(UTC)
-    payload = {
-        "sub": str(actor_id),
-        "org_id": str(organization_id),
-        "roles": roles,
-        "email": email,
-        "iss": "enterprise-ai-dev",
-        "aud": cfg.oidc_audience,
-        "iat": int(now.timestamp()),
-        "exp": int((now + timedelta(minutes=expires_minutes)).timestamp()),
-        "token_use": "dev",
-    }
-    return jwt.encode(payload, cfg.dev_auth_secret, algorithm="HS256")
+    return mint_access_token(
+        organization_id=organization_id,
+        actor_id=actor_id,
+        roles=roles,
+        email=email,
+        settings=cfg,
+        expires_minutes=expires_minutes,
+        token_use="dev",
+    )
 
 
 @lru_cache
@@ -135,7 +157,7 @@ async def decode_access_token(token: str, settings: Settings) -> dict[str, Any]:
         raise HTTPException(status_code=401, detail="invalid token header") from exc
 
     alg = header.get("alg")
-    if settings.dev_auth_enabled and alg == "HS256":
+    if alg == "HS256" and (settings.dev_auth_enabled or settings.registration_enabled):
         try:
             return jwt.decode(
                 token,
@@ -145,7 +167,7 @@ async def decode_access_token(token: str, settings: Settings) -> dict[str, Any]:
                 options={"verify_iss": False},
             )
         except JWTError as exc:
-            raise HTTPException(status_code=401, detail="invalid dev token") from exc
+            raise HTTPException(status_code=401, detail="invalid app token") from exc
 
     # OIDC JWKS path
     try:

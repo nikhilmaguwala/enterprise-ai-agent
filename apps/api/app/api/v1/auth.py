@@ -9,7 +9,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import Settings, get_settings
-from app.core.security import ExecutionContext, get_execution_context, mint_dev_token
+from app.core.security import ExecutionContext, get_execution_context, mint_access_token, mint_dev_token
 from app.db import models as m
 from app.db.session import get_db
 from app.schemas import DevLoginRequest, DevTokenRequest, InviteRequest, LoginRequest, RegisterRequest
@@ -37,7 +37,7 @@ def _auth_response(
 ) -> dict:
     db_role = membership.role
     frontend_role = _ROLE_TO_FRONTEND.get(db_role, db_role)
-    token = mint_dev_token(
+    token = mint_access_token(
         organization_id=org.id,
         actor_id=user.id,
         roles=[db_role],

@@ -99,8 +99,13 @@ export function canAccessPath(role: Role | undefined, path: string): boolean {
   }
   if (role === "agent") {
     return (
-      !path.startsWith("/operations") && !path.startsWith("/evaluations")
+      !path.startsWith("/operations") &&
+      !path.startsWith("/evaluations") &&
+      !path.startsWith("/team")
     );
+  }
+  if (role === "supervisor") {
+    return !path.startsWith("/team");
   }
   return true;
 }

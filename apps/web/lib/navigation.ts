@@ -6,6 +6,7 @@ import {
   MessageSquare,
   Network,
   Settings2,
+  UserPlus,
   type LucideIcon,
 } from "lucide-react";
 
@@ -61,6 +62,13 @@ export const MAIN_NAV: NavItem[] = [
     icon: Settings2,
     roles: ["admin"],
     match: (pathname) => pathname.startsWith("/operations"),
+  },
+  {
+    href: "/team/invite",
+    label: "Invite team",
+    icon: UserPlus,
+    roles: ["admin"],
+    match: (pathname) => pathname.startsWith("/team"),
   },
   {
     href: "/architecture",

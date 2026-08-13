@@ -26,6 +26,9 @@ import {
   type KnowledgeDocument,
   type Message,
   type MessageList,
+  InviteResponseSchema,
+  type InviteResponse,
+  type InviteRole,
   type MeResponse,
   type OperationsDashboard,
 } from "@/lib/schemas";
@@ -130,6 +133,61 @@ export async function fetchCurrentUser(): Promise<MeResponse> {
 
 export async function devLogin(email: string) {
   return exchangeAuth("/api/auth/dev-login", { email });
+}
+
+const INVITE_ROLE_TO_API: Record<InviteRole, string> = {
+  customer: "customer",
+  agent: "support_agent",
+  supervisor: "supervisor",
+  admin: "admin",
+};
+
+export async function inviteTeamMember(input: {
+  email: string;
+  fullName: string;
+  role: InviteRole;
+}): Promise<InviteResponse> {
+  const token = getAccessToken();
+  if (!token) {
+    throw new Error("Not authenticated");
+  }
+
+  const response = await fetch("/api/auth/invite", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      email: input.email,
+      full_name: input.fullName,
+      role: INVITE_ROLE_TO_API[input.role],
+    }),
+  });
+
+  const text = await response.text();
+  let parsed: unknown = null;
+  if (text) {
+    try {
+      parsed = JSON.parse(text) as unknown;
+    } catch {
+      parsed = { detail: text };
+    }
+  }
+
+  if (!response.ok) {
+    const detail =
+      typeof parsed === "object" &&
+      parsed &&
+      "detail" in parsed &&
+      typeof (parsed as { detail: unknown }).detail === "string"
+        ? (parsed as { detail: string }).detail
+        : `Invite failed (${response.status})`;
+    throw new Error(detail);
+  }
+
+  return InviteResponseSchema.parse(parsed);
 }
 
 export async function listConversations(): Promise<ConversationList> {

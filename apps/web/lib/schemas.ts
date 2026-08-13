@@ -33,6 +33,22 @@ export const MeResponseSchema = z.object({
 });
 export type MeResponse = z.infer<typeof MeResponseSchema>;
 
+export const InviteRoleSchema = z.enum([
+  "customer",
+  "agent",
+  "supervisor",
+  "admin",
+]);
+export type InviteRole = z.infer<typeof InviteRoleSchema>;
+
+export const InviteResponseSchema = z.object({
+  ok: z.boolean(),
+  email: z.string().email(),
+  role: RoleSchema,
+  temporary_password_sent: z.boolean(),
+});
+export type InviteResponse = z.infer<typeof InviteResponseSchema>;
+
 export const CitationSchema = z.object({
   id: z.string(),
   title: z.string(),

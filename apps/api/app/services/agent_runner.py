@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID, uuid4
 
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import Settings
@@ -59,15 +60,46 @@ class AgentRunner:
         retriever = HybridRetriever.from_settings(self.settings)
 
         customer_id = None
-        if ctx.organization_id == SeedIds.ORG_ACME:
-            customer_id = str(SeedIds.CUSTOMER_ACME)
-        elif ctx.organization_id == SeedIds.ORG_GLOBEX:
-            customer_id = str(SeedIds.CUSTOMER_GLOBEX)
+        customer_email = ctx.email
+        default_order: dict[str, Any] = {}
 
-        default_order = {}
+        db_customer = (
+            await self.db.execute(
+                select(m.Customer).where(
+                    m.Customer.organization_id == ctx.organization_id,
+                    m.Customer.user_id == ctx.actor_id,
+                )
+            )
+        ).scalar_one_or_none()
+        if db_customer is not None:
+            customer_id = str(db_customer.id)
+            customer_email = db_customer.email
+            db_order = (
+                await self.db.execute(
+                    select(m.Order)
+                    .where(
+                        m.Order.organization_id == ctx.organization_id,
+                        m.Order.customer_id == db_customer.id,
+                    )
+                    .order_by(m.Order.created_at.desc())
+                    .limit(1)
+                )
+            ).scalar_one_or_none()
+            if db_order is not None:
+                default_order = {
+                    "id": str(db_order.id),
+                    "order_number": db_order.order_number,
+                    "tracking_number": db_order.tracking_number,
+                }
+
+        if ctx.organization_id == SeedIds.ORG_ACME:
+            customer_id = customer_id or str(SeedIds.CUSTOMER_ACME)
+        elif ctx.organization_id == SeedIds.ORG_GLOBEX:
+            customer_id = customer_id or str(SeedIds.CUSTOMER_GLOBEX)
+
         if order_id:
             default_order = {"id": str(order_id)}
-        elif ctx.organization_id == SeedIds.ORG_ACME:
+        elif not default_order and ctx.organization_id == SeedIds.ORG_ACME:
             default_order = {
                 "id": str(SeedIds.ORDER_ACME_DELAYED),
                 "order_number": SeedIds.ORDER_NUMBER_ACME_DELAYED,
@@ -86,7 +118,7 @@ class AgentRunner:
             "roles": list(ctx.roles),
             "permissions": list(ctx.permissions),
             "order": default_order,
-            "customer": {"id": customer_id, "email": ctx.email},
+            "customer": {"id": customer_id, "email": customer_email},
             "proposed_action": proposed_action or {},
             "llm": llm,
             "tool_gateway": gateway,

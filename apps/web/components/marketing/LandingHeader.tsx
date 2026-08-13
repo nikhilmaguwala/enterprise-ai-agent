@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { DevUserSwitcher } from "@/components/auth/DevUserSwitcher";
 import { Button } from "@/components/ui/Button";
+import { isDevAuthEnabled, isRegistrationEnabled } from "@/lib/client";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/cn";
 
@@ -63,12 +64,30 @@ export function LandingHeader() {
           </nav>
         </div>
         <div className="flex items-center gap-3">
-          <DevUserSwitcher variant="landing" />
-          <Link href={user ? "/chat" : "/dashboard"}>
-            <Button icon={<ArrowRight className="size-4" />}>
-              {user ? "Open demo" : "Get started"}
-            </Button>
-          </Link>
+          {isRegistrationEnabled() ? (
+            <>
+              {!user ? (
+                <Link
+                  href="/login"
+                  className="hidden text-sm font-medium text-on-surface-variant hover:text-secondary sm:block"
+                >
+                  Sign in
+                </Link>
+              ) : null}
+              <Link href={user ? "/chat" : "/signup"}>
+                <Button icon={<ArrowRight className="size-4" />}>
+                  {user ? "Open app" : "Create account"}
+                </Button>
+              </Link>
+            </>
+          ) : (
+            <Link href={user ? "/chat" : "/dashboard"}>
+              <Button icon={<ArrowRight className="size-4" />}>
+                {user ? "Open demo" : "Get started"}
+              </Button>
+            </Link>
+          )}
+          {isDevAuthEnabled() ? <DevUserSwitcher variant="landing" /> : null}
         </div>
       </div>
     </header>

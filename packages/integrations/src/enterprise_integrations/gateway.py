@@ -44,23 +44,17 @@ class ToolGateway:
     @classmethod
     def from_settings(cls, settings: Any) -> ToolGateway:
         token = str(getattr(settings, "mock_service_token", "") or "")
+        urls = settings.service_base_urls() if hasattr(settings, "service_base_urls") else {
+            "crm": str(getattr(settings, "crm_base_url", "http://localhost:8101")),
+            "erp": str(getattr(settings, "erp_base_url", "http://localhost:8102")),
+            "carrier": str(getattr(settings, "carrier_base_url", "http://localhost:8103")),
+            "ticketing": str(getattr(settings, "ticketing_base_url", "http://localhost:8104")),
+        }
         return cls(
-            crm=CRMClient(
-                str(getattr(settings, "crm_base_url", "http://localhost:8101")),
-                token,
-            ),
-            erp=ERPClient(
-                str(getattr(settings, "erp_base_url", "http://localhost:8102")),
-                token,
-            ),
-            carrier=CarrierClient(
-                str(getattr(settings, "carrier_base_url", "http://localhost:8103")),
-                token,
-            ),
-            ticketing=TicketingClient(
-                str(getattr(settings, "ticketing_base_url", "http://localhost:8104")),
-                token,
-            ),
+            crm=CRMClient(urls["crm"], token),
+            erp=ERPClient(urls["erp"], token),
+            carrier=CarrierClient(urls["carrier"], token),
+            ticketing=TicketingClient(urls["ticketing"], token),
         )
 
     async def call(self, tool_name: str, **kwargs: Any) -> ToolResult:

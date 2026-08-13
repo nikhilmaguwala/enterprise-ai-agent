@@ -4,7 +4,10 @@ from __future__ import annotations
 
 from contextlib import asynccontextmanager
 from collections.abc import AsyncIterator
+from pathlib import Path
 
+from alembic import command
+from alembic.config import Config
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -13,6 +16,7 @@ from app.core.config import get_settings
 from app.core.errors import register_exception_handlers
 from app.core.logging import get_logger, setup_logging
 from app.middleware import RequestIdMiddleware
+from app.mocks.router import router as mocks_router
 
 logger = get_logger(__name__)
 
@@ -22,6 +26,10 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     settings = get_settings()
     settings.validate_runtime()
     setup_logging(json_logs=settings.app_env != "development")
+    if settings.run_migrations_on_startup:
+        alembic_cfg = Config(str(Path(__file__).resolve().parents[1] / "alembic.ini"))
+        command.upgrade(alembic_cfg, "head")
+        logger.info("migrations_applied")
     logger.info(
         "api_starting",
         app_env=settings.app_env,
@@ -54,6 +62,8 @@ def create_app() -> FastAPI:
 
     application.include_router(health_routes.router)
     application.include_router(api_router)
+    if settings.embedded_mocks_enabled:
+        application.include_router(mocks_router)
 
     @application.get("/")
     async def root() -> dict[str, str]:

@@ -14,6 +14,7 @@ import {
 import { DevUserSwitcher } from "@/components/auth/DevUserSwitcher";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { canAccessPath } from "@/lib/auth";
+import { isDevAuthEnabled } from "@/lib/client";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/cn";
 import { MAIN_NAV } from "@/lib/navigation";
@@ -214,7 +215,7 @@ export function AppShell({
                   </p>
                 </div>
               ) : null}
-              <DevUserSwitcher />
+              {isDevAuthEnabled() ? <DevUserSwitcher /> : null}
 
               <div className="hidden flex-col items-end lg:flex">
                 <div className="mb-1 flex items-center gap-2">

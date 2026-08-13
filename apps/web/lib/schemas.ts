@@ -23,6 +23,7 @@ export const DevLoginResponseSchema = z.object({
   token_type: z.string().default("bearer"),
   expires_in: z.number().optional(),
   user: UserSchema,
+  starter_order_number: z.string().optional(),
 });
 export type DevLoginResponse = z.infer<typeof DevLoginResponseSchema>;
 

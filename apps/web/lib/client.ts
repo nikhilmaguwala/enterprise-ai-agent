@@ -28,12 +28,11 @@ import {
   type OperationsDashboard,
 } from "@/lib/schemas";
 
-export async function devLogin(email: string) {
-  // Prefer same-origin route so browser CORS is not required during local demo.
-  const response = await fetch("/api/auth/dev-login", {
+async function exchangeAuth(path: string, body: Record<string, string>) {
+  const response = await fetch(path, {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify({ email }),
+    body: JSON.stringify(body),
   });
 
   const text = await response.text();
@@ -53,7 +52,7 @@ export async function devLogin(email: string) {
       "detail" in parsed &&
       typeof (parsed as { detail: unknown }).detail === "string"
         ? (parsed as { detail: string }).detail
-        : `Dev login failed (${response.status})`;
+        : `Authentication failed (${response.status})`;
     throw new Error(detail);
   }
 
@@ -61,6 +60,31 @@ export async function devLogin(email: string) {
   setAccessToken(data.access_token);
   setStoredUser(data.user);
   return data;
+}
+
+export async function registerAccount(input: {
+  email: string;
+  password: string;
+  fullName: string;
+  companyName: string;
+}) {
+  return exchangeAuth("/api/auth/register", {
+    email: input.email,
+    password: input.password,
+    full_name: input.fullName,
+    company_name: input.companyName,
+  });
+}
+
+export async function loginAccount(input: { email: string; password: string }) {
+  return exchangeAuth("/api/auth/login", {
+    email: input.email,
+    password: input.password,
+  });
+}
+
+export async function devLogin(email: string) {
+  return exchangeAuth("/api/auth/dev-login", { email });
 }
 
 export async function listConversations(): Promise<ConversationList> {
@@ -164,4 +188,8 @@ export function conversationEventsPath(conversationId: string): string {
 
 export function isDevAuthEnabled(): boolean {
   return env.devAuthEnabled;
+}
+
+export function isRegistrationEnabled(): boolean {
+  return env.registrationEnabled;
 }

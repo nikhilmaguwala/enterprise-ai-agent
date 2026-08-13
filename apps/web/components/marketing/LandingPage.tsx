@@ -67,9 +67,9 @@ export function LandingPage() {
                   Try the live demo
                 </Button>
               </Link>
-              <Link href="/architecture">
-                <Button variant="secondary" icon={<GitBranch className="size-4" />}>
-                  View architecture
+              <Link href="/signup">
+                <Button variant="secondary" icon={<ArrowRight className="size-4" />}>
+                  Create account
                 </Button>
               </Link>
             </div>

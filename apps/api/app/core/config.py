@@ -49,6 +49,10 @@ class Settings(BaseSettings):
     oidc_client_secret: str = ""
     dev_auth_enabled: bool = True
     dev_auth_secret: str = "dev-only-change-me-in-local"
+    allow_dev_auth_in_production: bool = False
+    registration_enabled: bool = True
+    embedded_mocks_enabled: bool = False
+    run_migrations_on_startup: bool = True
 
     llm_primary_provider: str = "groq"
     llm_primary_model: str = "openai/gpt-oss-20b"
@@ -145,12 +149,39 @@ class Settings(BaseSettings):
         return self.app_env == "production"
 
     def validate_runtime(self) -> None:
-        if self.is_production and self.dev_auth_enabled:
-            raise ValueError("DEV_AUTH_ENABLED must be false in production")
+        if (
+            self.is_production
+            and self.dev_auth_enabled
+            and not self.allow_dev_auth_in_production
+        ):
+            raise ValueError(
+                "DEV_AUTH_ENABLED must be false in production unless "
+                "ALLOW_DEV_AUTH_IN_PRODUCTION=true"
+            )
         if self.is_production and self.dev_auth_secret.startswith("dev-only"):
-            raise ValueError("DEV_AUTH_SECRET must be rotated in production")
+            if not self.dev_auth_enabled:
+                pass
+            elif not self.allow_dev_auth_in_production:
+                raise ValueError("DEV_AUTH_SECRET must be rotated in production")
         if len(self.internal_job_hmac_key) < 16:
             raise ValueError("INTERNAL_JOB_HMAC_KEY must be at least 16 characters")
+
+    def service_base_urls(self) -> dict[str, str]:
+        """Resolve integration URLs; embedded mocks run inside this API on cloud."""
+        if not self.embedded_mocks_enabled:
+            return {
+                "crm": self.crm_base_url.rstrip("/"),
+                "erp": self.erp_base_url.rstrip("/"),
+                "carrier": self.carrier_base_url.rstrip("/"),
+                "ticketing": self.ticketing_base_url.rstrip("/"),
+            }
+        base = self.api_url.rstrip("/")
+        return {
+            "crm": f"{base}/mocks/crm",
+            "erp": f"{base}/mocks/erp",
+            "carrier": f"{base}/mocks/carrier",
+            "ticketing": f"{base}/mocks/ticketing",
+        }
 
 
 @lru_cache

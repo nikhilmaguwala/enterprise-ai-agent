@@ -5,6 +5,7 @@ from __future__ import annotations
 from contextlib import asynccontextmanager
 from collections.abc import AsyncIterator
 from pathlib import Path
+import asyncio
 
 from alembic import command
 from alembic.config import Config
@@ -28,7 +29,11 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     setup_logging(json_logs=settings.app_env != "development")
     if settings.run_migrations_on_startup:
         alembic_cfg = Config(str(Path(__file__).resolve().parents[1] / "alembic.ini"))
-        command.upgrade(alembic_cfg, "head")
+
+        def _upgrade() -> None:
+            command.upgrade(alembic_cfg, "head")
+
+        await asyncio.to_thread(_upgrade)
         logger.info("migrations_applied")
     logger.info(
         "api_starting",

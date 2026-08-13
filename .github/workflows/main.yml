@@ -68,32 +68,4 @@ jobs:
           test "$lines" -ge 60
           PYTHONPATH=. python -c "from evals.graders.deterministic import smoke, run_dataset_smoke; smoke(); run_dataset_smoke()"
 
-  deploy-vercel:
-    name: Deploy frontend to Vercel (if token present)
-    runs-on: ubuntu-latest
-    needs: [full-tests, eval-full]
-    if: ${{ secrets.VERCEL_TOKEN != '' }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: apps/web
-          vercel-args: "--prod"
-
-  # FastAPI Cloud Hobby deploy is intentionally MANUAL.
-  # Official path: interactive browser login + `fastapi deploy` from apps/api.
-  # Do not invent unsupported CI flags. See infra/fastapi-cloud/README.md.
-  fastapi-cloud-manual-note:
-    name: FastAPI Cloud manual deploy note
-    runs-on: ubuntu-latest
-    needs: [full-tests, eval-full]
-    steps:
-      - name: Document manual step
-        run: |
-          echo "::notice title=FastAPI Cloud::Deploy manually with: cd apps/api && fastapi login && fastapi deploy"
-          echo "Set production env vars in the FastAPI Cloud dashboard (or fastapi cloud env set)."
-          echo "Details: infra/fastapi-cloud/README.md and docs/deployment.md"
+  # Production deploy runs in .github/workflows/deploy.yml on every push to main.

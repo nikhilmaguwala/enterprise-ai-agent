@@ -121,9 +121,25 @@ cd apps/api
 fastapi deploy
 ```
 
-## CI note
+## CI deploy (GitHub Actions)
 
-Automatic FastAPI Cloud deploy from GitHub Actions is **not** configured by default for Hobby because it requires interactive browser login and operator-managed credentials. `.github/workflows/main.yml` documents a manual gate. If you later obtain a supported non-interactive method from FastAPI Cloud, wire it explicitly — do not invent flags.
+Pushes to `main` run `.github/workflows/deploy.yml`, which deploys in parallel:
+
+- **API** → FastAPI Cloud via `fastapi cloud deploy` (requires repo secrets `FASTAPI_CLOUD_TOKEN`, `FASTAPI_CLOUD_APP_ID`)
+- **Web** → Vercel via `amondnet/vercel-action` (requires `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`)
+
+Bootstrap secrets once from a logged-in machine:
+
+```bash
+cd apps/api
+fastapi cloud setup-ci --secrets-only --app-id <your-app-id>
+# Vercel: create a token at https://vercel.com/account/tokens then:
+gh secret set VERCEL_TOKEN
+gh secret set VERCEL_ORG_ID
+gh secret set VERCEL_PROJECT_ID
+```
+
+The workflow runs `scripts/prepare-fastapi-cloud.sh` before each API deploy so monorepo packages are vendored into `apps/api/packages`.
 
 ## Troubleshooting
 

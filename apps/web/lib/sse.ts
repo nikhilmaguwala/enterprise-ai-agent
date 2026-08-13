@@ -30,9 +30,11 @@ export function connectSse(
   const open = () => {
     if (closed) return;
 
-    const base = env.apiUrl.replace(/\/$/, "");
     const normalized = path.startsWith("/") ? path : `/${path}`;
-    const url = new URL(`${base}${normalized}`);
+    const url =
+      typeof window !== "undefined"
+        ? new URL(normalized, window.location.origin)
+        : new URL(`${env.apiUrl.replace(/\/$/, "")}${normalized}`);
     const token = options?.token ?? getAccessToken();
     if (token) {
       url.searchParams.set("access_token", token);

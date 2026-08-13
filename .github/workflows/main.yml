@@ -19,27 +19,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: astral-sh/setup-uv@v7
         with:
           python-version: "3.12"
-          cache: pip
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
       - name: Install Python
         run: |
-          python -m pip install --upgrade pip
-          pip install ruff mypy pytest pytest-asyncio httpx
-          if [ -f apps/api/pyproject.toml ]; then pip install -e "apps/api.[dev]" || pip install -e apps/api; fi
-          if [ -f pyproject.toml ]; then pip install -e ".[dev]" || true; fi
+          bash scripts/prepare-fastapi-cloud.sh
+          uv sync --all-extras
+          cd apps/api && uv sync --all-extras
       - name: Ruff
         run: |
-          ruff format --check apps packages services evals || true
-          ruff check apps packages services evals || true
+          uv run ruff format --check apps packages services evals || true
+          uv run ruff check apps packages services evals || true
       - name: Pytest
         run: |
           if [ -d apps/api/tests ]; then
-            cd apps/api && PYTHONPATH=. pytest -q --tb=short
+            cd apps/api && uv run pytest -q --tb=short
           else
             echo "API tests not present yet"
           fi

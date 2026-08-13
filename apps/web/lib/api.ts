@@ -25,9 +25,12 @@ type ApiOptions = {
 };
 
 function buildUrl(path: string): string {
-  const base = env.apiUrl.replace(/\/$/, "");
   const normalized = path.startsWith("/") ? path : `/${path}`;
-  return `${base}${normalized}`;
+  // Browser calls stay same-origin; Next rewrites proxy to the API upstream.
+  if (typeof window !== "undefined") {
+    return normalized;
+  }
+  return `${env.apiUrl.replace(/\/$/, "")}${normalized}`;
 }
 
 export async function apiFetch<T>(

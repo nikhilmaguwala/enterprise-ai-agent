@@ -8,12 +8,16 @@ import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/cn";
 
-const NAV = [
+const NAV: Array<{
+  href: string;
+  label: string;
+  exact?: boolean;
+}> = [
   { href: "/", label: "Landing", exact: true },
   { href: "/dashboard", label: "Overview" },
   { href: "/chat", label: "Conversations" },
   { href: "/architecture", label: "Architecture" },
-] as const;
+];
 
 export function LandingHeader() {
   const pathname = usePathname();

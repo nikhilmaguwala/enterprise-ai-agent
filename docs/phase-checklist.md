@@ -27,5 +27,7 @@
 
 ## Hosted URLs
 
-- Frontend (Vercel): https://enterprise-ai-support-agent.vercel.app
-- Backend (FastAPI Cloud): pending operator deploy — see `docs/setup-remaining-services.md`
+Set in your deployment provider (not committed):
+
+- Frontend (Vercel): `https://your-app.vercel.app`
+- Backend (FastAPI Cloud): `https://your-app.fastapicloud.dev`

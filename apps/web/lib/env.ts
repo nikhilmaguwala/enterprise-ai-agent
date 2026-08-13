@@ -2,8 +2,7 @@
  * Public env only — never put secrets in NEXT_PUBLIC_* vars.
  */
 const LOCAL_API_URL = "http://localhost:8000";
-const PRODUCTION_API_URL =
-  "https://enterprise-ai-support-agent.fastapicloud.dev";
+const LOCAL_APP_URL = "http://localhost:3000";
 
 function isUsableHttpUrl(raw: string | undefined): raw is string {
   if (!raw || raw.includes("SENSITIVE")) return false;
@@ -22,9 +21,7 @@ function resolveApiUrl(): string {
       return candidate.replace(/\/$/, "");
     }
   }
-  return process.env.NODE_ENV === "production"
-    ? PRODUCTION_API_URL
-    : LOCAL_API_URL;
+  return LOCAL_API_URL;
 }
 
 function resolveAppUrl(): string {
@@ -32,9 +29,7 @@ function resolveAppUrl(): string {
   if (isUsableHttpUrl(raw)) {
     return raw.replace(/\/$/, "");
   }
-  return process.env.NODE_ENV === "production"
-    ? "https://enterprise-ai-support-agent.vercel.app"
-    : "http://localhost:3000";
+  return LOCAL_APP_URL;
 }
 
 export const env = {

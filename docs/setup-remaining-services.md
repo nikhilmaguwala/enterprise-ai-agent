@@ -10,7 +10,7 @@ Vercel frontend is deployed.
 | Neon Postgres | Done | Migrated + seeded |
 | Qdrant Cloud | Credentials present | Collection auto-created on first upsert; adapter uses `query_points` |
 | Groq | Credentials present | Primary LLM |
-| Vercel Hobby | Done | https://enterprise-ai-support-agent.vercel.app |
+| Vercel Hobby | Done | `https://your-app.vercel.app` |
 | FastAPI Cloud Hobby | **You** | Steps below |
 | Upstash Redis Free | **You** | Rate limits / locks |
 | Cloudflare R2 | **You** | Doc uploads (local filesystem works meanwhile) |
@@ -44,9 +44,9 @@ LLM_PRIMARY_PROVIDER=groq
 LLM_PRIMARY_MODEL=openai/gpt-oss-20b
 INTERNAL_JOB_SECRET=...
 INTERNAL_JOB_HMAC_KEY=...   # >=16 chars
-CORS_ORIGINS=https://enterprise-ai-support-agent.vercel.app
-API_URL=https://<your-app>.fastapicloud.dev
-APP_URL=https://enterprise-ai-support-agent.vercel.app
+CORS_ORIGINS=https://your-app.vercel.app
+API_URL=https://your-app.fastapicloud.dev
+APP_URL=https://your-app.vercel.app
 CRM_BASE_URL=...   # mock services or deployed mocks
 ERP_BASE_URL=...
 CARRIER_BASE_URL=...
@@ -87,7 +87,7 @@ Do **not** invent unsupported CLI flags. If `fastapi deploy` prompts for project
 ## 4) Auth0
 
 1. Create Regular Web Application + API audience  
-2. Allowed callback: `https://enterprise-ai-support-agent.vercel.app/api/auth/callback`  
+2. Allowed callback: `https://your-app.vercel.app/api/auth/callback`  
 3. Allowed logout/origin: the Vercel URL  
 4. Set `OIDC_ISSUER`, `OIDC_AUDIENCE`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`  
 5. Set `DEV_AUTH_ENABLED=false` in production once OIDC works.

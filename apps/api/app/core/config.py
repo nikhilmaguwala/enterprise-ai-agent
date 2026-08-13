@@ -38,7 +38,7 @@ class Settings(BaseSettings):
     r2_bucket: str = "enterprise-ai-docs"
     object_storage_backend: Literal["filesystem", "r2", "s3", "firebase"] = "filesystem"
     object_storage_path: str = "./data/storage"
-    firebase_storage_bucket: str = "atmiya-db.appspot.com"
+    firebase_storage_bucket: str = ""
     firebase_storage_root: str = "resolve-ai"
     firebase_credentials_path: str = ""
     firebase_credentials_json: str = ""

@@ -106,8 +106,9 @@ export default function KnowledgePage() {
             <p className="mt-1 text-sm text-on-surface-variant">
               Files land in{" "}
               <code className="text-xs">resolve-ai/&#123;org&#125;/documents/pdfs|images|other/</code>{" "}
-              on bucket <code className="text-xs">atmiya-db.appspot.com</code>.
-              PDFs and images are sorted automatically by MIME type.
+              on your configured object storage bucket (
+              <code className="text-xs">FIREBASE_STORAGE_BUCKET</code> or R2). PDFs
+              and images are sorted automatically by MIME type.
             </p>
             {uploadError ? (
               <p className="mt-2 text-xs text-danger">{uploadError}</p>

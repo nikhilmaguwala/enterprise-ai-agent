@@ -59,5 +59,4 @@ evals/reports/*.json
 
 # Generated vendor copies for FastAPI Cloud deploy (see scripts/prepare-fastapi-cloud.sh)
 # Keep tracked for cloud uploads; regenerate with `bash scripts/prepare-fastapi-cloud.sh`
-.vercel
-.env*
+.vercel/

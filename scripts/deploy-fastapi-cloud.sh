@@ -22,7 +22,12 @@ fi
 
 echo "Deploying from $API_DIR ..."
 cd "$API_DIR"
-"$FASTAPI_BIN" deploy --app-id cbb6161b-3492-4f56-aff4-fbd0b6ac565b --json
+APP_ID="${FASTAPI_CLOUD_APP_ID:-}"
+if [[ -z "$APP_ID" ]]; then
+  echo "Set FASTAPI_CLOUD_APP_ID to your FastAPI Cloud app id (see infra/fastapi-cloud/README.md)."
+  exit 1
+fi
+"$FASTAPI_BIN" deploy --app-id "$APP_ID" --json
 
 echo ""
 echo "Next steps:"

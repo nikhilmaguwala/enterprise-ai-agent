@@ -43,17 +43,15 @@ export function ChatWorkspace() {
     "active",
   );
 
-  const [starterOrder, setStarterOrder] = useState<string | null>(null);
+  const [starterOrder, setStarterOrder] = useState<string | null>(() =>
+    getStarterOrderNumber(),
+  );
 
   const exampleOrder = useMemo(() => {
     if (starterOrder) return starterOrder;
     if (user?.email.endsWith("@acme-demo.test")) return "ACM-10001";
     return "your order";
   }, [starterOrder, user?.email]);
-
-  useEffect(() => {
-    setStarterOrder(getStarterOrderNumber());
-  }, [user?.email]);
 
   useEffect(() => {
     if (!ready || !token || isDemoMode()) return;

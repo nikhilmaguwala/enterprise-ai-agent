@@ -17,7 +17,9 @@ import { canAccessPath } from "@/lib/auth";
 import { isDemoMode } from "@/lib/client";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/cn";
+import type { NavItem } from "@/lib/navigation";
 import { MAIN_NAV } from "@/lib/navigation";
+import type { User } from "@/lib/schemas";
 
 type AppShellProps = {
   children: React.ReactNode;
@@ -35,6 +37,95 @@ function isNavActive(
 ) {
   if (match) return match(pathname);
   return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+type SidebarContentProps = {
+  pathname: string;
+  user: User | null;
+  visibleNav: NavItem[];
+  logout: () => void;
+  onNavigate?: () => void;
+};
+
+function SidebarContent({
+  pathname,
+  user,
+  visibleNav,
+  logout,
+  onNavigate,
+}: SidebarContentProps) {
+  return (
+    <>
+      <Link
+        href={user ? "/dashboard" : "/"}
+        onClick={onNavigate}
+        className="mb-6 flex items-center gap-2 px-2"
+      >
+        <div className="flex size-8 items-center justify-center rounded bg-primary text-sm font-bold text-on-primary">
+          R
+        </div>
+        <div>
+          <p className="text-base font-bold leading-none text-primary">
+            ResolveAI
+          </p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
+            Enterprise Support
+          </p>
+        </div>
+      </Link>
+
+      <div className="flex-1 space-y-1 overflow-y-auto">
+        {visibleNav.map((item) => {
+          const active = isNavActive(pathname, item.href, item.match);
+          const Icon = item.icon;
+          return (
+            <Link
+              key={`${item.href}-${item.label}`}
+              href={item.href}
+              onClick={onNavigate}
+              className={cn(
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                active
+                  ? "bg-secondary-container font-semibold text-on-secondary-container"
+                  : "text-on-surface-variant hover:bg-surface-container-high",
+              )}
+            >
+              <Icon className="size-5 shrink-0" />
+              <span>{item.label}</span>
+              {item.badge ? (
+                <span className="ml-auto rounded-full bg-error px-2 py-0.5 text-[10px] font-bold text-white">
+                  {item.badge}
+                </span>
+              ) : null}
+            </Link>
+          );
+        })}
+      </div>
+
+      <div className="mt-auto space-y-1 border-t border-outline-variant pt-2">
+        <Link
+          href="/"
+          onClick={onNavigate}
+          className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-on-surface-variant transition-colors hover:bg-surface-container-high"
+        >
+          ← Back to landing
+        </Link>
+        {user ? (
+          <button
+            type="button"
+            onClick={() => {
+              logout();
+              onNavigate?.();
+            }}
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-on-surface-variant transition-colors hover:bg-surface-container-high"
+          >
+            <LogOut className="size-5" />
+            Logout
+          </button>
+        ) : null}
+      </div>
+    </>
+  );
 }
 
 export function AppShell({
@@ -59,81 +150,6 @@ export function AppShell({
 
   const greeting = user?.name?.split(" ")[0] ?? "there";
 
-  function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
-    return (
-      <>
-        <Link
-          href={user ? "/dashboard" : "/"}
-          onClick={onNavigate}
-          className="mb-6 flex items-center gap-2 px-2"
-        >
-          <div className="flex size-8 items-center justify-center rounded bg-primary text-sm font-bold text-on-primary">
-            R
-          </div>
-          <div>
-            <p className="text-base font-bold leading-none text-primary">
-              ResolveAI
-            </p>
-            <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-              Enterprise Support
-            </p>
-          </div>
-        </Link>
-
-        <div className="flex-1 space-y-1 overflow-y-auto">
-          {visibleNav.map((item) => {
-            const active = isNavActive(pathname, item.href, item.match);
-            const Icon = item.icon;
-            return (
-              <Link
-                key={`${item.href}-${item.label}`}
-                href={item.href}
-                onClick={onNavigate}
-                className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                  active
-                    ? "bg-secondary-container font-semibold text-on-secondary-container"
-                    : "text-on-surface-variant hover:bg-surface-container-high",
-                )}
-              >
-                <Icon className="size-5 shrink-0" />
-                <span>{item.label}</span>
-                {item.badge ? (
-                  <span className="ml-auto rounded-full bg-error px-2 py-0.5 text-[10px] font-bold text-white">
-                    {item.badge}
-                  </span>
-                ) : null}
-              </Link>
-            );
-          })}
-        </div>
-
-        <div className="mt-auto space-y-1 border-t border-outline-variant pt-2">
-          <Link
-            href="/"
-            onClick={onNavigate}
-            className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-on-surface-variant transition-colors hover:bg-surface-container-high"
-          >
-            ← Back to landing
-          </Link>
-          {user ? (
-            <button
-              type="button"
-              onClick={() => {
-                logout();
-                onNavigate?.();
-              }}
-              className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-on-surface-variant transition-colors hover:bg-surface-container-high"
-            >
-              <LogOut className="size-5" />
-              Logout
-            </button>
-          ) : null}
-        </div>
-      </>
-    );
-  }
-
   return (
     <div className="flex h-screen overflow-hidden bg-background text-on-surface">
       <a
@@ -147,7 +163,12 @@ export function AppShell({
         aria-label="Primary"
         className="hidden w-64 shrink-0 flex-col border-r border-outline-variant bg-surface-container-low p-4 md:flex"
       >
-        <SidebarContent />
+        <SidebarContent
+          pathname={pathname}
+          user={user}
+          visibleNav={visibleNav}
+          logout={logout}
+        />
       </nav>
 
       {mobileOpen ? (
@@ -167,7 +188,13 @@ export function AppShell({
             >
               <X className="size-5" />
             </button>
-            <SidebarContent onNavigate={() => setMobileOpen(false)} />
+            <SidebarContent
+              pathname={pathname}
+              user={user}
+              visibleNav={visibleNav}
+              logout={logout}
+              onNavigate={() => setMobileOpen(false)}
+            />
           </nav>
         </div>
       ) : null}

@@ -1,0 +1,17 @@
+.git
+.venv
+venv
+node_modules
+**/__pycache__
+**/.next
+**/.turbo
+data/storage/**
+*.log
+.env
+.env.*
+!.env.example
+evals/reports/*.json
+infra/terraform/.terraform
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache

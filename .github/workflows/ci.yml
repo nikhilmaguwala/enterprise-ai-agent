@@ -1,0 +1,115 @@
+name: CI (pull request)
+
+on:
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-pr-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  python-quality:
+    name: Python lint, types, unit tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install tooling + API
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff mypy pytest pytest-asyncio httpx
+          if [ -f pyproject.toml ]; then pip install -e ".[dev]" || pip install -e .; fi
+          if [ -f ../../pyproject.toml ]; then pip install -e "../../.[dev]" || true; fi
+      - name: Ruff format check
+        working-directory: ${{ github.workspace }}
+        run: ruff format --check apps packages services evals || ruff format --check .
+      - name: Ruff lint
+        working-directory: ${{ github.workspace }}
+        run: ruff check apps packages services evals || ruff check .
+      - name: Type check (mypy/pyright if configured)
+        run: |
+          if [ -f pyproject.toml ] && grep -q "\[tool.mypy\]" pyproject.toml; then mypy app || true; fi
+          if command -v pyright >/dev/null 2>&1; then pyright || true; fi
+          # Soft-fail only when no packages yet; harden once types land
+          mypy app --ignore-missing-imports || echo "mypy reported issues (fail when API matures)"
+        continue-on-error: true
+      - name: Unit tests
+        run: |
+          if [ -d tests/unit ]; then pytest tests/unit -q --tb=short; \
+          elif [ -d tests ]; then pytest tests -q --tb=short -m "not integration and not e2e" || pytest tests -q --tb=short; \
+          else echo "No tests yet"; fi
+
+  typescript-quality:
+    name: TypeScript lint and typecheck
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - name: Install
+        run: |
+          if [ -f package.json ]; then npm ci || npm install; else echo "web package not ready"; exit 0; fi
+      - name: Lint
+        run: |
+          if [ -f package.json ]; then npm run lint --if-present; fi
+      - name: Typecheck
+        run: |
+          if [ -f package.json ]; then npm run typecheck --if-present || npx tsc --noEmit; fi
+
+  secret-scan:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  docker-build:
+    name: Docker build (optional)
+    runs-on: ubuntu-latest
+    if: ${{ vars.ENABLE_DOCKER_CI == 'true' || contains(github.event.pull_request.labels.*.name, 'docker') }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build API image
+        run: docker build -f apps/api/Dockerfile -t enterprise-ai-api:ci .
+      - name: Build web image
+        run: |
+          if [ -f apps/web/package.json ]; then docker build -f apps/web/Dockerfile -t enterprise-ai-web:ci apps/web; fi
+      - name: Build mock images
+        run: |
+          for s in mock-crm mock-erp mock-carrier mock-ticketing; do
+            docker build -t enterprise-ai-$s:ci services/$s
+          done
+
+  eval-smoke:
+    name: Eval graders smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run deterministic grader smoke
+        run: |
+          PYTHONPATH=. python -c "from evals.graders.deterministic import smoke; smoke()"

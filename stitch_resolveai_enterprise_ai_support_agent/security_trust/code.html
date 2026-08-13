@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ResolveAI - Security and Trust</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-fixed": "#00174b",
+                      "on-error-container": "#93000a",
+                      "tertiary-fixed": "#eaddff",
+                      "secondary-container": "#316bf3",
+                      "outline-variant": "#c6c5d0",
+                      "tertiary": "#1c0047",
+                      "on-background": "#121c28",
+                      "surface-bright": "#f8f9ff",
+                      "background": "#f8f9ff",
+                      "inverse-primary": "#b7c4fd",
+                      "on-tertiary": "#ffffff",
+                      "primary": "#000f3f",
+                      "on-surface": "#121c28",
+                      "on-tertiary-container": "#a375ff",
+                      "error": "#ba1a1a",
+                      "on-tertiary-fixed-variant": "#5a00c6",
+                      "on-primary-container": "#808dc2",
+                      "on-primary-fixed-variant": "#374475",
+                      "on-error": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "tertiary-fixed-dim": "#d2bbff",
+                      "primary-fixed-dim": "#b7c4fd",
+                      "inverse-on-surface": "#eaf1ff",
+                      "surface-container-high": "#dfe9fa",
+                      "on-secondary-fixed-variant": "#003ea8",
+                      "inverse-surface": "#27313e",
+                      "error-container": "#ffdad6",
+                      "outline": "#767680",
+                      "on-surface-variant": "#45464f",
+                      "tertiary-container": "#35007a",
+                      "primary-fixed": "#dce1ff",
+                      "on-tertiary-fixed": "#25005a",
+                      "secondary-fixed-dim": "#b4c5ff",
+                      "surface-container": "#e5eeff",
+                      "surface": "#f8f9ff",
+                      "secondary": "#0051d5",
+                      "surface-variant": "#d9e3f4",
+                      "on-primary-fixed": "#071747",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-tint": "#4f5c8e",
+                      "on-secondary-container": "#fefcff",
+                      "surface-dim": "#d1dbec",
+                      "primary-container": "#172554",
+                      "secondary-fixed": "#dbe1ff",
+                      "on-primary": "#ffffff",
+                      "surface-container-highest": "#d9e3f4",
+                      "surface-container-low": "#eef4ff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sm": "8px",
+                      "margin": "32px",
+                      "lg": "24px",
+                      "xxl": "48px",
+                      "xl": "32px",
+                      "gutter": "24px",
+                      "md": "16px",
+                      "max_width": "1440px",
+                      "xs": "4px",
+                      "unit": "8px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": ["Geist"],
+                      "headline-lg": ["Geist"],
+                      "tabular-nums": ["Geist"],
+                      "body-sm": ["Geist"],
+                      "label-sm": ["Geist"],
+                      "label-md": ["Geist"],
+                      "body-md": ["Geist"],
+                      "body-lg": ["Geist"],
+                      "display": ["Geist"],
+                      "headline-md": ["Geist"]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "tabular-nums": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "500"}]
+              }
+            }
+          }
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer utilities {
+            .glass-card {
+                @apply bg-surface-container-lowest/80 backdrop-blur-md border border-outline-variant;
+            }
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md antialiased min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface-container-low border-b border-outline-variant dark:border-outline docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center w-full px-lg py-sm max-w-max_width mx-auto">
+<div class="flex items-center gap-xl">
+<a class="font-headline-lg text-headline-lg font-black text-primary dark:text-primary-fixed" href="#">ResolveAI</a>
+<!-- Desktop Nav -->
+<nav class="hidden md:flex gap-lg">
+<a class="text-on-surface-variant hover:text-secondary font-label-md text-label-md hover:bg-surface-container-low transition-colors duration-200 py-2 px-3 rounded" href="#">Landing</a>
+<a class="text-on-surface-variant hover:text-secondary font-label-md text-label-md hover:bg-surface-container-low transition-colors duration-200 py-2 px-3 rounded" href="#">Architecture</a>
+<a class="text-secondary border-b-2 border-secondary pb-1 font-label-md text-label-md opacity-80 py-2 px-3" href="#">Security</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<button class="hidden md:block font-label-md text-label-md text-on-surface hover:bg-surface-container-low px-4 py-2 rounded transition-colors border border-outline-variant">Login</button>
+<button class="font-label-md text-label-md bg-[#2563EB] text-white px-4 py-2 rounded hover:bg-secondary/90 transition-colors">Get Started</button>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-on-surface-variant p-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+</header>
+<main class="flex-grow w-full max-w-max_width mx-auto px-margin py-xxl flex flex-col gap-xxl">
+<!-- Hero Section -->
+<section class="text-center max-w-3xl mx-auto flex flex-col gap-lg mt-xl">
+<div class="inline-flex items-center gap-sm bg-[#F5F3FF] text-[#7C3AED] px-3 py-1 rounded-full text-label-sm font-label-sm self-center border border-[#Eaddff]">
+<span class="material-symbols-outlined" style="font-size: 16px;">shield</span>
+                Enterprise Grade Security
+            </div>
+<h1 class="font-display text-display text-primary">Trust is our foundation.</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+                ResolveAI is architected from the ground up for stringent enterprise security requirements. We provide uncompromising data isolation, granular access controls, and transparent auditability for all AI operations.
+            </p>
+</section>
+<!-- Core Pillars Bento -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
+<!-- Pillar 1: Tenant Isolation -->
+<div class="glass-card rounded-lg p-lg flex flex-col gap-md lg:col-span-2 row-span-2 relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-surface-container-low/50 to-transparent pointer-events-none"></div>
+<div class="flex items-start justify-between relative z-10">
+<div class="bg-primary-container p-sm rounded text-primary">
+<span class="material-symbols-outlined" style="font-size: 32px;">layers</span>
+</div>
+</div>
+<div class="relative z-10 mt-auto">
+<h3 class="font-headline-md text-headline-md text-primary mb-sm">Strict Tenant Isolation</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                        Every organization operates within a cryptographically isolated silo. Data, models, and execution environments are rigidly separated, ensuring zero cross-tenant data leakage. Dedicated compute instances are available for high-compliance environments.
+                    </p>
+</div>
+<!-- Conceptual Image for Isolation -->
+<div class="mt-md rounded overflow-hidden border border-outline-variant h-48 relative z-10">
+<img class="w-full h-full object-cover" data-alt="A highly abstract, technical 3D visualization representing strict digital tenant isolation. Glowing blue and white data streams are securely segmented within distinct, transparent crystalline cubes in a sleek, light-mode enterprise environment. The aesthetic is corporate modernist, precise, and secure, utilizing a low-noise background with crisp edges and soft studio lighting to convey impenetrable data silos." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDg-bHpUQTt0dTjZA6UWEJjox2hl1YpfUfOf4bPYeZ3sWm2A2InlB-yZ-ceQ-T_oPeA8VFcPPYeUa6unm-XFUA_A0CFHyqg1w1kUIic8l2VQg6pIEZuMzbHhB18VEYcIw-tsyUoKQl1cxiGc7mAeyLoSSpL9lww_SC_y5d3ABAoZESPpRllS_NQuj9vXMvlKL7BA3tCRCSKwt54VSxM0RDP83Z4u_vKTYtb6sJgmJ0Ig67WRB0RghEMIg"/>
+</div>
+</div>
+<!-- Pillar 2: RBAC -->
+<div class="glass-card rounded-lg p-lg flex flex-col gap-md">
+<div class="bg-surface-container-high p-sm rounded text-primary w-fit">
+<span class="material-symbols-outlined">manage_accounts</span>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-primary font-bold mb-xs">Role-Based Access Control</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                        Granular permissions mapping to your existing organizational hierarchy. Control exactly who can view, execute, or approve specific AI workflows down to the resource level.
+                    </p>
+</div>
+</div>
+<!-- Pillar 3: Human-in-the-loop -->
+<div class="glass-card rounded-lg p-lg flex flex-col gap-md">
+<div class="bg-[#F5F3FF] p-sm rounded text-[#7C3AED] w-fit border border-[#Eaddff]">
+<span class="material-symbols-outlined">rule</span>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-primary font-bold mb-xs">Explicit Approvals</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                        Mandate human-in-the-loop (HITL) checkpoints for sensitive actions. AI proposals are paused until explicitly authorized by designated personnel via secure, logged interfaces.
+                    </p>
+</div>
+</div>
+<!-- Pillar 4: Data Redaction -->
+<div class="glass-card rounded-lg p-lg flex flex-col gap-md lg:col-span-1">
+<div class="bg-error-container p-sm rounded text-error w-fit">
+<span class="material-symbols-outlined">ink_eraser</span>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-primary font-bold mb-xs">Dynamic Data Redaction</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                        PII and sensitive credentials are automatically identified and redacted before hitting any LLM endpoint, ensuring compliance with GDPR, HIPAA, and internal data policies.
+                    </p>
+</div>
+</div>
+</section>
+<!-- Feature Grid Section -->
+<section class="flex flex-col gap-lg mt-xl pt-xl border-t border-outline-variant">
+<div class="flex flex-col gap-sm">
+<h2 class="font-headline-lg text-headline-lg text-primary">Comprehensive Defense</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+                    Our platform incorporates multiple layers of security to protect against both traditional web vulnerabilities and emerging AI-specific threats.
+                </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-md">
+<!-- Feature 1 -->
+<div class="p-md border border-outline-variant rounded bg-surface hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-secondary">vpn_key</span>
+<h4 class="font-label-md text-label-md font-bold">OAuth & OIDC Integration</h4>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                        Seamlessly integrate with your existing Identity Providers (Okta, Entra ID, Google Workspace) via standard protocols for centralized identity management.
+                    </p>
+</div>
+<!-- Feature 2 -->
+<div class="p-md border border-outline-variant rounded bg-surface hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-secondary">history</span>
+<h4 class="font-label-md text-label-md font-bold">Immutable Audit Logging</h4>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                        Every action, API call, and AI generation is logged securely. Export logs directly to your SIEM (Splunk, Datadog) for comprehensive monitoring.
+                    </p>
+</div>
+<!-- Feature 3 -->
+<div class="p-md border border-outline-variant rounded bg-surface hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-secondary">gpp_bad</span>
+<h4 class="font-label-md text-label-md font-bold">Prompt Injection Guardrails</h4>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                        Dedicated heuristic and semantic analysis layers intercept and neutralize adversarial inputs before they reach the core reasoning models.
+                    </p>
+</div>
+<!-- Feature 4 -->
+<div class="p-md border border-outline-variant rounded bg-surface hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-secondary">sync_lock</span>
+<h4 class="font-label-md text-label-md font-bold">Idempotent Operations</h4>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                        Critical API endpoints are designed for idempotency, ensuring that network retries or duplicate requests do not result in unintended state changes.
+                    </p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-on-surface w-full py-xl px-margin flex flex-col md:flex-row justify-between items-center max-w-max_width mx-auto border-t border-outline-variant mt-auto">
+<div class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed mb-4 md:mb-0">
+            ResolveAI
+        </div>
+<nav class="flex flex-wrap justify-center gap-md font-body-sm text-body-sm">
+<a class="text-on-surface-variant hover:text-secondary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors" href="#">Terms of Service</a>
+<a class="text-primary underline hover:text-secondary transition-colors" href="#">Security Compliance</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors" href="#">Status</a>
+</nav>
+<div class="font-label-sm text-label-sm text-on-surface-variant mt-4 md:mt-0">
+            © 2024 ResolveAI Enterprise. All rights reserved.
+        </div>
+</footer>
+</body></html>

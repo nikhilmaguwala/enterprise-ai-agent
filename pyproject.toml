@@ -1,0 +1,48 @@
+[project]
+name = "enterprise-ai-agent"
+version = "0.1.0"
+description = "Enterprise AI Support Agent monorepo tooling workspace"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "ruff>=0.9.0",
+  "mypy>=1.14.0",
+  "pytest>=8.3.0",
+  "pytest-asyncio>=0.25.0",
+  "httpx>=0.28.0",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["apps", "packages", "services", "evals"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+pretty = true
+warn_unused_ignores = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["apps/api/tests", "evals"]
+pythonpath = ["apps/api", "packages/agent/src", "packages/domain/src", "packages/integrations/src", "packages/knowledge/src", "packages/observability/src", "."]
+
+[tool.fastapi]
+# Used when deploying from repo root; prefer apps/api for fastapi deploy.
+entrypoint = "app.main:app"
+
+[build-system]
+requires = ["setuptools>=75.0.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["evals*"]
+exclude = ["apps*", "services*", "infra*", "docs*", "data*"]

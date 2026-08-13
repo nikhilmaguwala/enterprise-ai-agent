@@ -1,0 +1,11 @@
+# Shipping Delay Policy
+
+Orders may be delayed due to carrier hub exceptions, weather, or capacity constraints.
+Customers receive updated ETAs when carrier status is delayed.
+
+# Address Change Policy
+
+Address changes require human approval.
+Address changes are blocked when shipment status is out_for_delivery or delivered.
+Proposed addresses must be valid US addresses and differ from the current address.
+Mutations use idempotency keys and are verified with a follow-up read.

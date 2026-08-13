@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>API Keys - ResolveAI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        @font-face {
+            font-family: 'Geist';
+            src: url('https://cdn.jsdelivr.net/npm/@fontsource/geist-sans@5.0.1/files/geist-sans-latin-400-normal.woff2') format('woff2');
+            font-weight: 400;
+        }
+        @font-face {
+            font-family: 'Geist';
+            src: url('https://cdn.jsdelivr.net/npm/@fontsource/geist-sans@5.0.1/files/geist-sans-latin-500-normal.woff2') format('woff2');
+            font-weight: 500;
+        }
+        @font-face {
+            font-family: 'Geist';
+            src: url('https://cdn.jsdelivr.net/npm/@fontsource/geist-sans@5.0.1/files/geist-sans-latin-600-normal.woff2') format('woff2');
+            font-weight: 600;
+        }
+        @font-face {
+            font-family: 'Geist';
+            src: url('https://cdn.jsdelivr.net/npm/@fontsource/geist-sans@5.0.1/files/geist-sans-latin-700-normal.woff2') format('woff2');
+            font-weight: 700;
+        }
+        
+        /* Blur effect for masked keys */
+        .blur-key {
+            filter: blur(4px);
+            user-select: none;
+            transition: filter 0.2s ease;
+        }
+        .blur-key:hover {
+            filter: blur(0px);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-fixed-variant": "#003ea8",
+                      "tertiary": "#1c0047",
+                      "on-primary-fixed": "#071747",
+                      "primary-fixed": "#dce1ff",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary-fixed": "#25005a",
+                      "outline": "#767680",
+                      "tertiary-fixed": "#eaddff",
+                      "on-surface": "#121c28",
+                      "error-container": "#ffdad6",
+                      "on-tertiary-fixed-variant": "#5a00c6",
+                      "on-secondary-fixed": "#00174b",
+                      "tertiary-container": "#35007a",
+                      "surface-container": "#e5eeff",
+                      "surface-bright": "#f8f9ff",
+                      "on-tertiary-container": "#a375ff",
+                      "surface-container-highest": "#d9e3f4",
+                      "on-primary-container": "#808dc2",
+                      "surface-container-low": "#eef4ff",
+                      "on-primary": "#ffffff",
+                      "on-background": "#121c28",
+                      "secondary-fixed": "#dbe1ff",
+                      "primary-container": "#172554",
+                      "on-tertiary": "#ffffff",
+                      "surface": "#f8f9ff",
+                      "on-surface-variant": "#45464f",
+                      "secondary-fixed-dim": "#b4c5ff",
+                      "surface-variant": "#d9e3f4",
+                      "surface-dim": "#d1dbec",
+                      "outline-variant": "#c6c5d0",
+                      "surface-tint": "#4f5c8e",
+                      "primary": "#000f3f",
+                      "primary-fixed-dim": "#b7c4fd",
+                      "error": "#ba1a1a",
+                      "surface-container-lowest": "#ffffff",
+                      "on-error": "#ffffff",
+                      "inverse-surface": "#27313e",
+                      "secondary-container": "#316bf3",
+                      "background": "#f8f9ff",
+                      "on-primary-fixed-variant": "#374475",
+                      "on-secondary-container": "#fefcff",
+                      "surface-container-high": "#dfe9fa",
+                      "inverse-primary": "#b7c4fd",
+                      "tertiary-fixed-dim": "#d2bbff",
+                      "inverse-on-surface": "#eaf1ff",
+                      "on-error-container": "#93000a",
+                      "secondary": "#0051d5"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "unit": "8px",
+                      "lg": "24px",
+                      "max_width": "1440px",
+                      "sm": "8px",
+                      "xs": "4px",
+                      "xxl": "48px",
+                      "md": "16px",
+                      "gutter": "24px",
+                      "xl": "32px",
+                      "margin": "32px"
+              },
+              "fontFamily": {
+                      "body-md": [
+                              "Geist"
+                      ],
+                      "headline-lg-mobile": [
+                              "Geist"
+                      ],
+                      "label-sm": [
+                              "Geist"
+                      ],
+                      "tabular-nums": [
+                              "Geist"
+                      ],
+                      "label-md": [
+                              "Geist"
+                      ],
+                      "headline-lg": [
+                              "Geist"
+                      ],
+                      "headline-md": [
+                              "Geist"
+                      ],
+                      "body-lg": [
+                              "Geist"
+                      ],
+                      "body-sm": [
+                              "Geist"
+                      ],
+                      "display": [
+                              "Geist"
+                      ]
+              },
+              "fontSize": {
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "tabular-nums": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.01em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex antialiased">
+<!-- SideNavBar -->
+<nav class="hidden md:flex bg-primary dark:bg-primary h-screen w-64 fixed left-0 top-0 border-r border-outline-variant flex flex-col h-full py-md px-sm z-50">
+<div class="mb-xl px-sm flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary-container flex items-center justify-center text-on-primary-container font-bold">R</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-on-primary">ResolveAI</h1>
+<p class="font-label-sm text-label-sm text-on-primary-container">Enterprise Hub</p>
+</div>
+</div>
+<ul class="flex-1 space-y-1">
+<li>
+<a class="flex items-center gap-3 px-sm py-2 rounded text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+                    Overview
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-sm py-2 rounded text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">forum</span>
+                    Conversations
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-sm py-2 rounded text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">inbox</span>
+                    Support Inbox
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-sm py-2 rounded text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">menu_book</span>
+                    Knowledge
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-sm py-2 rounded text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">play_arrow</span>
+                    Agent Runs
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-sm py-2 rounded text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">fact_check</span>
+                    Approvals
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-sm py-2 rounded text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">analytics</span>
+                    Evaluations
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-sm py-2 rounded text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings_suggest</span>
+                    Operations
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-sm py-2 rounded text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">history</span>
+                    Audit Log
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-sm py-2 rounded text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">extension</span>
+                    Integrations
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-sm py-2 rounded text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">groups</span>
+                    Team
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-sm py-2 rounded bg-secondary-container text-on-secondary-container font-medium font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+                    Settings
+                </a>
+</li>
+</ul>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 md:ml-64 flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface h-16 fixed top-0 right-0 w-full md:w-[calc(100%-16rem)] border-b border-outline-variant flex justify-between items-center px-gutter z-40">
+<div class="flex items-center">
+<!-- Mobile Menu Button (Visible only on mobile) -->
+<button class="md:hidden mr-4 text-on-surface-variant hover:bg-surface-container-low p-2 rounded transition-colors duration-150">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<span class="font-label-md text-label-md text-primary dark:text-primary-fixed border-b-2 border-primary hidden md:inline-block py-5">API Keys</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:bg-surface-container-low p-2 rounded transition-colors duration-150 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-low p-2 rounded transition-colors duration-150">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden ml-2 border border-outline-variant cursor-pointer">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A close up, highly detailed, high-key studio portrait of a professional individual looking slightly off-camera. The lighting is crisp and modern, fitting an enterprise software context. Neutral background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKtveup5KGtx1GL46_vfqCy_qkpxdU7MNJVrDvRp7vk8HoyftPhxlPfqAzExt2ALdot2oSBJpt4-36vdS64TiB8PT-t_L2EiiT3MHgaCSUfsJ19WPUyyDUyr5UQ5T5BBaACMvxqKM3PjspdXA5K14ntkeVE900f5DDx1gLUUMZarTD_tDxTEZQ1hqpYwjm4kDWSm1kbtR85qlx9iGEm02CmVB4JBFvp_foI5Zru389qafCrw41NGqYVA"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 mt-16 p-md md:p-lg lg:p-xl overflow-y-auto">
+<div class="max-w-max_width mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-xl gap-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-xs">API Keys</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">Manage your secret keys for programmatic access to the ResolveAI API. Do not share your API keys in publicly accessible areas such as GitHub, client-side code, and so forth.</p>
+</div>
+<button class="bg-[#2563EB] hover:bg-secondary text-white font-label-md text-label-md py-2 px-4 rounded flex items-center gap-2 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 18px;">add</span>
+                        Generate New Key
+                    </button>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-lg">
+<!-- Main API Keys List (Takes up 2/3 on desktop) -->
+<div class="lg:col-span-2 bg-surface rounded-lg border border-outline-variant overflow-hidden flex flex-col">
+<div class="p-md border-b border-outline-variant bg-surface-bright flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-on-surface">Active Keys</h3>
+<span class="bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm px-2 py-1 rounded">3 Keys</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-[#F1F5F9] font-label-sm text-label-sm text-on-surface-variant border-b border-outline-variant">
+<tr>
+<th class="py-3 px-md font-semibold">NAME</th>
+<th class="py-3 px-md font-semibold">SECRET KEY</th>
+<th class="py-3 px-md font-semibold">CREATED</th>
+<th class="py-3 px-md font-semibold">LAST USED</th>
+<th class="py-3 px-md text-right font-semibold">ACTIONS</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm">
+<tr class="border-b border-outline-variant hover:bg-[#F8FAFC] transition-colors">
+<td class="py-4 px-md">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#15803D]"></span>
+<span class="font-medium text-on-surface">Production App Primary</span>
+</div>
+</td>
+<td class="py-4 px-md font-tabular-nums text-tabular-nums text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span>res_live_</span>
+<span class="blur-key">********************</span>
+<button class="text-on-surface-variant hover:text-primary transition-colors" title="Copy to clipboard">
+<span class="material-symbols-outlined" style="font-size: 16px;">content_copy</span>
+</button>
+</div>
+</td>
+<td class="py-4 px-md text-on-surface-variant">Oct 12, 2023</td>
+<td class="py-4 px-md text-on-surface-variant">Just now</td>
+<td class="py-4 px-md text-right">
+<button class="text-on-surface-variant hover:text-error transition-colors p-1 rounded hover:bg-error-container">
+<span class="material-symbols-outlined" style="font-size: 18px;">delete</span>
+</button>
+</td>
+</tr>
+<tr class="border-b border-outline-variant hover:bg-[#F8FAFC] transition-colors">
+<td class="py-4 px-md">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#15803D]"></span>
+<span class="font-medium text-on-surface">Staging Environment</span>
+</div>
+</td>
+<td class="py-4 px-md font-tabular-nums text-tabular-nums text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span>res_test_</span>
+<span class="blur-key">********************</span>
+<button class="text-on-surface-variant hover:text-primary transition-colors" title="Copy to clipboard">
+<span class="material-symbols-outlined" style="font-size: 16px;">content_copy</span>
+</button>
+</div>
+</td>
+<td class="py-4 px-md text-on-surface-variant">Nov 04, 2023</td>
+<td class="py-4 px-md text-on-surface-variant">2 hours ago</td>
+<td class="py-4 px-md text-right">
+<button class="text-on-surface-variant hover:text-error transition-colors p-1 rounded hover:bg-error-container">
+<span class="material-symbols-outlined" style="font-size: 18px;">delete</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-[#F8FAFC] transition-colors">
+<td class="py-4 px-md">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#B45309]"></span>
+<span class="font-medium text-on-surface">Developer CI Pipeline</span>
+</div>
+</td>
+<td class="py-4 px-md font-tabular-nums text-tabular-nums text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span>res_test_</span>
+<span class="blur-key">********************</span>
+<button class="text-on-surface-variant hover:text-primary transition-colors" title="Copy to clipboard">
+<span class="material-symbols-outlined" style="font-size: 16px;">content_copy</span>
+</button>
+</div>
+</td>
+<td class="py-4 px-md text-on-surface-variant">Dec 10, 2023</td>
+<td class="py-4 px-md text-on-surface-variant">Never</td>
+<td class="py-4 px-md text-right">
+<button class="text-on-surface-variant hover:text-error transition-colors p-1 rounded hover:bg-error-container">
+<span class="material-symbols-outlined" style="font-size: 18px;">delete</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Side Panels (Takes up 1/3 on desktop) -->
+<div class="flex flex-col gap-lg">
+<!-- Usage Summary Card -->
+<div class="bg-surface rounded-lg border border-outline-variant overflow-hidden">
+<div class="p-md border-b border-outline-variant bg-surface-bright">
+<h3 class="font-headline-md text-headline-md text-on-surface">API Usage</h3>
+</div>
+<div class="p-md">
+<div class="mb-4">
+<div class="flex justify-between text-body-sm font-body-sm mb-2">
+<span class="text-on-surface-variant">Requests this month</span>
+<span class="text-on-surface font-medium">142,050 / 500k</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-2">
+<div class="bg-secondary-container h-2 rounded-full" style="width: 28%"></div>
+</div>
+</div>
+<div class="bg-[#F5F3FF] border border-[#EADDFF] rounded p-3 flex items-start gap-3 mt-4">
+<span class="material-symbols-outlined text-[#7C3AED]" style="font-size: 20px;">auto_awesome</span>
+<div>
+<h4 class="font-label-md text-label-md text-[#5A00C6]">AI Rate Limits Status</h4>
+<p class="font-body-sm text-body-sm text-[#35007A] mt-1">You are currently operating well within your allocated capacity for generative endpoints.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Documentation Links -->
+<div class="bg-surface rounded-lg border border-outline-variant p-md">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-4">Resources</h3>
+<ul class="space-y-3 font-body-sm text-body-sm">
+<li>
+<a class="flex items-center justify-between text-on-surface hover:text-primary transition-colors group" href="#">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary" style="font-size: 18px;">book</span>
+                                            API Documentation
+                                        </span>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary" style="font-size: 16px;">open_in_new</span>
+</a>
+</li>
+<li>
+<a class="flex items-center justify-between text-on-surface hover:text-primary transition-colors group" href="#">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary" style="font-size: 18px;">code_blocks</span>
+                                            SDKs &amp; Libraries
+                                        </span>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary" style="font-size: 16px;">open_in_new</span>
+</a>
+</li>
+<li>
+<a class="flex items-center justify-between text-on-surface hover:text-primary transition-colors group" href="#">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary" style="font-size: 18px;">security</span>
+                                            Authentication Guide
+                                        </span>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary" style="font-size: 16px;">open_in_new</span>
+</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

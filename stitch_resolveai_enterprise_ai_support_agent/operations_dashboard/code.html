@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Operations Dashboard | ResolveAI</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#e5eeff",
+                        "on-primary-fixed": "#071747",
+                        "tertiary-fixed-dim": "#d2bbff",
+                        "on-surface-variant": "#45464f",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#eef4ff",
+                        "on-primary-container": "#808dc2",
+                        "secondary-fixed": "#dbe1ff",
+                        "on-secondary-fixed": "#00174b",
+                        "surface-dim": "#d1dbec",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "secondary": "#0051d5",
+                        "outline-variant": "#c6c5d0",
+                        "secondary-container": "#316bf3",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#172554",
+                        "surface-bright": "#f8f9ff",
+                        "primary-fixed-dim": "#b7c4fd",
+                        "tertiary": "#1c0047",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "background": "#f8f9ff",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface": "#f8f9ff",
+                        "on-surface": "#121c28",
+                        "on-background": "#121c28",
+                        "on-secondary-container": "#fefcff",
+                        "tertiary-container": "#35007a",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#5a00c6",
+                        "surface-container-highest": "#d9e3f4",
+                        "tertiary-fixed": "#eaddff",
+                        "surface-container-high": "#dfe9fa",
+                        "surface-variant": "#d9e3f4",
+                        "outline": "#767680",
+                        "on-primary": "#ffffff",
+                        "primary": "#000f3f",
+                        "inverse-primary": "#b7c4fd",
+                        "on-primary-fixed-variant": "#374475",
+                        "inverse-surface": "#27313e",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-tertiary-container": "#a375ff",
+                        "primary-fixed": "#dce1ff",
+                        "surface-tint": "#4f5c8e",
+                        "on-tertiary-fixed": "#25005a",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin": "32px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "max_width": "1440px",
+                        "unit": "8px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "xs": "4px",
+                        "xxl": "48px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "label-md": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "headline-lg-mobile": ["Geist"],
+                        "tabular-nums": ["Geist"],
+                        "body-md": ["Geist"],
+                        "display": ["Geist"],
+                        "body-sm": ["Geist"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "tabular-nums": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md h-screen overflow-hidden flex selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- Navigation Shell: SideNavBar (Desktop) -->
+<aside class="hidden md:flex bg-surface-container-low text-secondary border-r border-outline-variant docked h-screen left-0 w-64 flex-col h-full p-md gap-sm z-50">
+<!-- Header -->
+<div class="flex items-center gap-md mb-lg p-sm">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">ResolveAI</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Enterprise Support</p>
+</div>
+</div>
+<!-- Main Navigation -->
+<nav class="flex-1 flex flex-col gap-xs overflow-y-auto">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Overview</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150" href="#">
+<span class="material-symbols-outlined">forum</span>
+<span class="font-label-md text-label-md">Conversations</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150" href="#">
+<span class="material-symbols-outlined">inbox</span>
+<span class="font-label-md text-label-md">Support Inbox</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150" href="#">
+<span class="material-symbols-outlined">database</span>
+<span class="font-label-md text-label-md">Knowledge</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150" href="#">
+<span class="material-symbols-outlined">bolt</span>
+<span class="font-label-md text-label-md">Agent Runs</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150" href="#">
+<span class="material-symbols-outlined">rule</span>
+<span class="font-label-md text-label-md">Approvals</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md text-label-md">Evaluations</span>
+</a>
+<!-- Active Tab: Operations -->
+<a class="flex items-center gap-md px-md py-sm rounded-lg bg-secondary-container text-on-secondary-container font-bold transition-all duration-150" href="#">
+<span class="material-symbols-outlined icon-fill">settings_input_component</span>
+<span class="font-label-md text-label-md">Operations</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-md text-label-md">Audit Log</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150" href="#">
+<span class="material-symbols-outlined">extension</span>
+<span class="font-label-md text-label-md">Integrations</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-md text-label-md">Team</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<!-- Footer Navigation -->
+<div class="mt-auto border-t border-outline-variant pt-sm flex flex-col gap-xs">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Help</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md text-label-md">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto bg-surface relative">
+<div class="max-w-max_width mx-auto p-md md:p-lg lg:p-margin flex flex-col gap-lg md:gap-xl">
+<!-- Page Header -->
+<header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
+<div>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface font-semibold tracking-tight">Operations Dashboard</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">System health, integration statuses, and background jobs.</p>
+</div>
+<div class="flex items-center gap-sm">
+<span class="flex items-center gap-sm text-on-surface-variant font-label-sm text-label-sm bg-surface-container-lowest border border-outline-variant px-md py-xs rounded-full">
+<span class="inline-block w-2 h-2 rounded-full" style="background-color: #15803D;"></span>
+                        System Operational
+                    </span>
+<button class="bg-surface-container-lowest border border-outline-variant text-on-surface hover:bg-surface-container-low transition-colors rounded-DEFAULT px-md py-sm font-label-md text-label-md flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">refresh</span>
+                        Refresh
+                    </button>
+</div>
+</header>
+<!-- Key Metrics Bento Grid -->
+<section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-sm md:gap-md">
+<!-- Metric 1: API Latency -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col gap-xs hover:border-secondary transition-colors group">
+<div class="flex justify-between items-start">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">API Latency</span>
+<span class="material-symbols-outlined text-outline text-[20px] group-hover:text-secondary transition-colors">speed</span>
+</div>
+<div class="mt-sm flex items-baseline gap-xs">
+<span class="font-headline-lg text-headline-lg text-on-surface font-tabular-nums">124</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">ms</span>
+</div>
+<div class="flex items-center gap-xs mt-auto pt-sm">
+<span class="material-symbols-outlined text-[16px]" style="color: #15803D;">trending_down</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Normal</span>
+</div>
+</div>
+<!-- Metric 2: Database Health -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col gap-xs hover:border-secondary transition-colors group">
+<div class="flex justify-between items-start">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">PostgreSQL DB</span>
+<span class="material-symbols-outlined text-outline text-[20px] group-hover:text-secondary transition-colors">database</span>
+</div>
+<div class="mt-sm flex items-baseline gap-xs">
+<span class="font-headline-lg text-headline-lg text-on-surface">Healthy</span>
+</div>
+<div class="flex items-center gap-xs mt-auto pt-sm">
+<span class="inline-block w-2 h-2 rounded-full" style="background-color: #15803D;"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Connections: 42/100</span>
+</div>
+</div>
+<!-- Metric 3: Vector DB -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col gap-xs hover:border-secondary transition-colors group">
+<div class="flex justify-between items-start">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Qdrant Vector DB</span>
+<span class="material-symbols-outlined text-outline text-[20px] group-hover:text-secondary transition-colors">memory</span>
+</div>
+<div class="mt-sm flex items-baseline gap-xs">
+<span class="font-headline-lg text-headline-lg text-on-surface">Healthy</span>
+</div>
+<div class="flex items-center gap-xs mt-auto pt-sm">
+<span class="inline-block w-2 h-2 rounded-full" style="background-color: #15803D;"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Latency: 45ms</span>
+</div>
+</div>
+<!-- Metric 4: Redis Cache -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col gap-xs hover:border-secondary transition-colors group">
+<div class="flex justify-between items-start">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Redis Cache Hit</span>
+<span class="material-symbols-outlined text-outline text-[20px] group-hover:text-secondary transition-colors">data_usage</span>
+</div>
+<div class="mt-sm flex items-baseline gap-xs">
+<span class="font-headline-lg text-headline-lg text-on-surface font-tabular-nums">98.2</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">%</span>
+</div>
+<div class="flex items-center gap-xs mt-auto pt-sm">
+<span class="material-symbols-outlined text-[16px]" style="color: #15803D;">trending_up</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Optimal</span>
+</div>
+</div>
+<!-- Metric 5: AI Provider -->
+<div class="bg-[#f5f3ff] border border-[#e2e8f0] rounded-lg p-md flex flex-col gap-xs group">
+<div class="flex justify-between items-start">
+<span class="font-label-sm text-label-sm text-[#7c3aed] uppercase flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">auto_awesome</span>
+                            Groq AI Uptime
+                        </span>
+</div>
+<div class="mt-sm flex items-baseline gap-xs">
+<span class="font-headline-lg text-headline-lg text-[#7c3aed] font-tabular-nums">99.99</span>
+<span class="font-body-sm text-body-sm text-[#7c3aed]">%</span>
+</div>
+<div class="flex items-center gap-xs mt-auto pt-sm">
+<span class="inline-block w-2 h-2 rounded-full bg-[#7c3aed]"></span>
+<span class="font-label-sm text-label-sm text-[#7c3aed]">Inference stable</span>
+</div>
+</div>
+</section>
+<!-- Mid Section: Integrations & Jobs -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-md lg:gap-lg">
+<!-- Integration Health -->
+<div class="lg:col-span-2 flex flex-col gap-sm">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-xs border-b border-outline-variant pb-sm">Integration Health</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-sm">
+<!-- CRM -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">contacts</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Salesforce CRM API</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Avg latency: 210ms | Err: 0.1%</p>
+</div>
+</div>
+<div class="flex items-center gap-xs bg-green-50 px-sm py-xs rounded text-[#15803D]">
+<span class="inline-block w-2 h-2 rounded-full" style="background-color: #15803D;"></span>
+<span class="font-label-sm text-label-sm">Healthy</span>
+</div>
+</div>
+<!-- ERP -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">NetSuite ERP API</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Avg latency: 850ms | Err: 2.4%</p>
+</div>
+</div>
+<div class="flex items-center gap-xs bg-amber-50 px-sm py-xs rounded text-[#B45309]">
+<span class="inline-block w-2 h-2 rounded-full" style="background-color: #B45309;"></span>
+<span class="font-label-sm text-label-sm">Degraded</span>
+</div>
+</div>
+<!-- Carrier -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">local_shipping</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">FedEx Carrier API</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Avg latency: 340ms | Err: 0.0%</p>
+</div>
+</div>
+<div class="flex items-center gap-xs bg-green-50 px-sm py-xs rounded text-[#15803D]">
+<span class="inline-block w-2 h-2 rounded-full" style="background-color: #15803D;"></span>
+<span class="font-label-sm text-label-sm">Healthy</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Background Jobs -->
+<div class="flex flex-col gap-sm">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-xs border-b border-outline-variant pb-sm">Background Jobs</h3>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col gap-md">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-sm">
+<div class="w-2 h-8 rounded-full bg-outline-variant"></div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Queued</p>
+<p class="font-headline-md text-headline-md text-on-surface font-tabular-nums">142</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant">queue</span>
+</div>
+<hr class="border-outline-variant border-t"/>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-sm">
+<div class="w-2 h-8 rounded-full bg-secondary"></div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Running</p>
+<p class="font-headline-md text-headline-md text-on-surface font-tabular-nums">24</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary">autorenew</span>
+</div>
+<hr class="border-outline-variant border-t"/>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-sm">
+<div class="w-2 h-8 rounded-full bg-error"></div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Failed (24h)</p>
+<p class="font-headline-md text-headline-md text-error font-tabular-nums">3</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-error">error</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Section: System Incidents -->
+<section class="flex flex-col gap-sm">
+<div class="flex justify-between items-center border-b border-outline-variant pb-sm">
+<h3 class="font-headline-md text-headline-md text-on-surface">System Incidents (Last 7 Days)</h3>
+<a class="font-label-sm text-label-sm text-secondary hover:underline" href="#">View All</a>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="p-sm md:p-md font-label-sm text-label-sm text-on-surface-variant font-semibold">Status</th>
+<th class="p-sm md:p-md font-label-sm text-label-sm text-on-surface-variant font-semibold">Event</th>
+<th class="p-sm md:p-md font-label-sm text-label-sm text-on-surface-variant font-semibold">Component</th>
+<th class="p-sm md:p-md font-label-sm text-label-sm text-on-surface-variant font-semibold">Timestamp</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm text-on-surface divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="p-sm md:p-md">
+<div class="flex items-center gap-xs text-[#B45309]">
+<span class="inline-block w-2 h-2 rounded-full" style="background-color: #B45309;"></span>
+                                            Warning
+                                        </div>
+</td>
+<td class="p-sm md:p-md font-medium">NetSuite API Rate Limit Reached</td>
+<td class="p-sm md:p-md text-on-surface-variant">Integration: ERP</td>
+<td class="p-sm md:p-md text-on-surface-variant font-tabular-nums">Today, 14:32 UTC</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="p-sm md:p-md">
+<div class="flex items-center gap-xs text-error">
+<span class="inline-block w-2 h-2 rounded-full bg-error"></span>
+                                            Error
+                                        </div>
+</td>
+<td class="p-sm md:p-md font-medium">Worker Node Crash (Out of Memory)</td>
+<td class="p-sm md:p-md text-on-surface-variant">Infrastructure: Background Jobs</td>
+<td class="p-sm md:p-md text-on-surface-variant font-tabular-nums">Yesterday, 08:15 UTC</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="p-sm md:p-md">
+<div class="flex items-center gap-xs text-[#15803D]">
+<span class="inline-block w-2 h-2 rounded-full" style="background-color: #15803D;"></span>
+                                            Resolved
+                                        </div>
+</td>
+<td class="p-sm md:p-md font-medium">Elevated API Latency (>500ms)</td>
+<td class="p-sm md:p-md text-on-surface-variant">Core API Gateway</td>
+<td class="p-sm md:p-md text-on-surface-variant font-tabular-nums">Oct 24, 11:00 UTC</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</div>
+</main>
+</body></html>

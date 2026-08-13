@@ -1,0 +1,182 @@
+# Local full-stack stack for Enterprise AI Support Agent.
+# Optional local LLM: docker compose --profile ollama up
+name: enterprise-ai-agent
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: enterprise
+      POSTGRES_PASSWORD: enterprise
+      POSTGRES_DB: enterprise_ai
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U enterprise -d enterprise_ai"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  qdrant:
+    image: qdrant/qdrant:v1.13.2
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/6333'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  minio:
+    image: minio/minio:RELEASE.2025-01-20T14-49-07Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  minio-init:
+    image: minio/mc:RELEASE.2025-01-17T23-25-33Z
+    depends_on:
+      minio:
+        condition: service_started
+    entrypoint: >
+      /bin/sh -c "
+      sleep 3;
+      mc alias set local http://minio:9000 minioadmin minioadmin;
+      mc mb -p local/enterprise-ai-docs || true;
+      exit 0;
+      "
+
+  mock-crm:
+    build:
+      context: ../services/mock-crm
+      dockerfile: Dockerfile
+    environment:
+      MOCK_SERVICE_TOKEN: mock-service-dev-token
+      PORT: "8101"
+    ports:
+      - "8101:8101"
+
+  mock-erp:
+    build:
+      context: ../services/mock-erp
+      dockerfile: Dockerfile
+    environment:
+      MOCK_SERVICE_TOKEN: mock-service-dev-token
+      PORT: "8102"
+    ports:
+      - "8102:8102"
+
+  mock-carrier:
+    build:
+      context: ../services/mock-carrier
+      dockerfile: Dockerfile
+    environment:
+      MOCK_SERVICE_TOKEN: mock-service-dev-token
+      PORT: "8103"
+    ports:
+      - "8103:8103"
+
+  mock-ticketing:
+    build:
+      context: ../services/mock-ticketing
+      dockerfile: Dockerfile
+    environment:
+      MOCK_SERVICE_TOKEN: mock-service-dev-token
+      PORT: "8104"
+    ports:
+      - "8104:8104"
+
+  api:
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+    env_file:
+      - ../.env
+    environment:
+      APP_ENV: development
+      DATABASE_URL: postgresql+asyncpg://enterprise:enterprise@postgres:5432/enterprise_ai
+      QDRANT_URL: http://qdrant:6333
+      OBJECT_STORAGE_BACKEND: s3
+      R2_ENDPOINT: http://minio:9000
+      R2_ACCESS_KEY_ID: minioadmin
+      R2_SECRET_ACCESS_KEY: minioadmin
+      R2_BUCKET: enterprise-ai-docs
+      CRM_BASE_URL: http://mock-crm:8101
+      ERP_BASE_URL: http://mock-erp:8102
+      CARRIER_BASE_URL: http://mock-carrier:8103
+      TICKETING_BASE_URL: http://mock-ticketing:8104
+      DEV_AUTH_ENABLED: "true"
+      CORS_ORIGINS: http://localhost:3000
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      qdrant:
+        condition: service_started
+      redis:
+        condition: service_healthy
+      mock-crm:
+        condition: service_started
+      mock-erp:
+        condition: service_started
+      mock-carrier:
+        condition: service_started
+      mock-ticketing:
+        condition: service_started
+
+  web:
+    build:
+      context: ../apps/web
+      dockerfile: Dockerfile
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      NEXT_PUBLIC_DEV_AUTH_ENABLED: "true"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+  ollama:
+    profiles: ["ollama"]
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+volumes:
+  postgres_data:
+  qdrant_data:
+  redis_data:
+  minio_data:
+  ollama_data:

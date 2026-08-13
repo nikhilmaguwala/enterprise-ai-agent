@@ -1,0 +1,85 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "enterprise-ai-api"
+version = "0.1.0"
+description = "Enterprise AI Support Agent API"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+  "fastapi[standard]>=0.115",
+  "uvicorn[standard]>=0.30",
+  "sqlalchemy[asyncio]>=2.0",
+  "asyncpg>=0.29",
+  "alembic>=1.13",
+  "pydantic-settings>=2.0",
+  "httpx>=0.27",
+  "structlog>=24.0",
+  "python-jose[cryptography]>=3.3",
+  "passlib>=1.7",
+  "groq>=0.11",
+  "langgraph>=0.2",
+  "langchain-core>=0.3",
+  "qdrant-client>=1.9",
+  "tenacity>=8.0",
+  "opentelemetry-api>=1.24",
+  "prometheus-client>=0.20",
+  "redis>=5.0",
+  "email-validator>=2.0",
+  "pypdf>=4.0",
+  "python-multipart>=0.0.9",
+  "firebase-admin>=6.5",
+  "sse-starlette>=2.0",
+  "enterprise-domain",
+  "enterprise-integrations",
+  "enterprise-knowledge",
+  "enterprise-agent",
+  "enterprise-observability",
+]
+
+[tool.uv.workspace]
+members = [
+  "packages/domain",
+  "packages/integrations",
+  "packages/knowledge",
+  "packages/agent",
+  "packages/observability",
+]
+
+[tool.uv.sources]
+enterprise-domain = { workspace = true }
+enterprise-integrations = { workspace = true }
+enterprise-knowledge = { workspace = true }
+enterprise-agent = { workspace = true }
+enterprise-observability = { workspace = true }
+
+[tool.fastapi]
+entrypoint = "app.main:app"
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "pytest-asyncio>=0.24",
+  "ruff>=0.6",
+  "mypy>=1.11",
+  "httpx>=0.27",
+  "anyio>=4.0",
+  "aiosqlite>=0.20",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true

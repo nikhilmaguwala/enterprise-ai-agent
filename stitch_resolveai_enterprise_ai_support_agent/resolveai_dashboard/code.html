@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ResolveAI Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-container": "#a375ff",
+                      "secondary": "#0051d5",
+                      "error-container": "#ffdad6",
+                      "error": "#ba1a1a",
+                      "tertiary-fixed": "#eaddff",
+                      "on-secondary-fixed": "#00174b",
+                      "surface-container-highest": "#d9e3f4",
+                      "surface-dim": "#d1dbec",
+                      "on-surface": "#121c28",
+                      "primary": "#000f3f",
+                      "primary-fixed-dim": "#b7c4fd",
+                      "surface-container-high": "#dfe9fa",
+                      "surface-bright": "#f8f9ff",
+                      "tertiary": "#1c0047",
+                      "on-tertiary-fixed-variant": "#5a00c6",
+                      "surface": "#f8f9ff",
+                      "surface-tint": "#4f5c8e",
+                      "surface-variant": "#d9e3f4",
+                      "inverse-primary": "#b7c4fd",
+                      "surface-container-low": "#eef4ff",
+                      "tertiary-container": "#35007a",
+                      "outline": "#767680",
+                      "background": "#f8f9ff",
+                      "secondary-fixed": "#dbe1ff",
+                      "on-surface-variant": "#45464f",
+                      "on-primary-fixed": "#071747",
+                      "on-secondary-container": "#fefcff",
+                      "inverse-on-surface": "#eaf1ff",
+                      "on-secondary-fixed-variant": "#003ea8",
+                      "inverse-surface": "#27313e",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-fixed-variant": "#374475",
+                      "primary-container": "#172554",
+                      "outline-variant": "#c6c5d0",
+                      "on-error": "#ffffff",
+                      "secondary-container": "#316bf3",
+                      "tertiary-fixed-dim": "#d2bbff",
+                      "on-error-container": "#93000a",
+                      "on-primary": "#ffffff",
+                      "secondary-fixed-dim": "#b4c5ff",
+                      "on-background": "#121c28",
+                      "on-tertiary-fixed": "#25005a",
+                      "surface-container-lowest": "#ffffff",
+                      "primary-fixed": "#dce1ff",
+                      "on-secondary": "#ffffff",
+                      "on-primary-container": "#808dc2",
+                      "surface-container": "#e5eeff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "md": "16px",
+                      "xl": "32px",
+                      "max_width": "1440px",
+                      "sm": "8px",
+                      "xxl": "48px",
+                      "lg": "24px",
+                      "margin": "32px",
+                      "xs": "4px",
+                      "unit": "8px",
+                      "gutter": "24px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": [
+                              "Geist"
+                      ],
+                      "label-sm": [
+                              "Geist"
+                      ],
+                      "label-md": [
+                              "Geist"
+                      ],
+                      "body-lg": [
+                              "Geist"
+                      ],
+                      "body-sm": [
+                              "Geist"
+                      ],
+                      "headline-md": [
+                              "Geist"
+                      ],
+                      "tabular-nums": [
+                              "Geist"
+                      ],
+                      "body-md": [
+                              "Geist"
+                      ],
+                      "display": [
+                              "Geist"
+                      ],
+                      "headline-lg": [
+                              "Geist"
+                      ]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.01em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "tabular-nums": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+          .material-symbols-outlined {
+              font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+          }
+          [data-weight="fill"] .material-symbols-outlined {
+              font-variation-settings: 'FILL' 1;
+          }
+          .bento-card {
+              background-color: #ffffff;
+              border: 1px solid #E2E8F0;
+              border-radius: 12px;
+              padding: 16px;
+          }
+      </style>
+</head>
+<body class="bg-background text-on-background font-body-sm h-screen overflow-hidden flex">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col h-screen left-0 w-64 bg-surface-container-low border-r border-outline-variant p-md gap-sm shrink-0">
+<div class="flex items-center gap-sm mb-lg">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined text-[18px]">domain</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md font-bold text-primary">ResolveAI</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Enterprise Support</p>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto space-y-1">
+<a class="flex items-center gap-sm p-2 bg-secondary-container text-on-secondary-container font-bold rounded-lg group" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Overview</span>
+</a>
+<a class="flex items-center gap-sm p-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg group transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="forum">forum</span>
+<span class="font-label-md text-label-md">Conversations</span>
+</a>
+<a class="flex items-center gap-sm p-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg group transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="inbox">inbox</span>
+<span class="font-label-md text-label-md">Support Inbox</span>
+</a>
+<a class="flex items-center gap-sm p-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg group transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="database">database</span>
+<span class="font-label-md text-label-md">Knowledge</span>
+</a>
+<a class="flex items-center gap-sm p-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg group transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="bolt">bolt</span>
+<span class="font-label-md text-label-md">Agent Runs</span>
+</a>
+<a class="flex items-center gap-sm p-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg group transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="rule">rule</span>
+<span class="font-label-md text-label-md">Approvals</span>
+<span class="ml-auto bg-error text-on-error rounded-full px-2 py-0.5 text-[10px] font-bold">12</span>
+</a>
+<a class="flex items-center gap-sm p-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg group transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="analytics">analytics</span>
+<span class="font-label-md text-label-md">Evaluations</span>
+</a>
+<a class="flex items-center gap-sm p-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg group transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings_input_component">settings_input_component</span>
+<span class="font-label-md text-label-md">Operations</span>
+</a>
+<a class="flex items-center gap-sm p-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg group transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="history">history</span>
+<span class="font-label-md text-label-md">Audit Log</span>
+</a>
+<a class="flex items-center gap-sm p-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg group transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="extension">extension</span>
+<span class="font-label-md text-label-md">Integrations</span>
+</a>
+<a class="flex items-center gap-sm p-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg group transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="group">group</span>
+<span class="font-label-md text-label-md">Team</span>
+</a>
+<a class="flex items-center gap-sm p-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg group transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+<div class="mt-auto space-y-1">
+<a class="flex items-center gap-sm p-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg group transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="help">help</span>
+<span class="font-label-md text-label-md">Help</span>
+</a>
+<a class="flex items-center gap-sm p-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg group transition-all duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="logout">logout</span>
+<span class="font-label-md text-label-md">Logout</span>
+</a>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col h-screen overflow-hidden">
+<!-- Top Utility Bar -->
+<header class="h-16 border-b border-outline-variant bg-surface px-lg flex items-center justify-between shrink-0">
+<div class="flex items-center gap-md">
+<h1 class="font-headline-md text-headline-md text-on-surface">Good morning, Nikhil</h1>
+<div class="h-4 w-px bg-outline-variant mx-sm"></div>
+<button class="flex items-center gap-xs px-3 py-1.5 border border-outline-variant rounded-md hover:bg-surface-container-lowest text-label-sm font-label-sm text-on-surface">
+                    Acme Corp
+                    <span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+<div class="flex items-center gap-xs px-2 py-1 bg-surface-container-highest rounded-md">
+<span class="w-2 h-2 rounded-full bg-[#15803D]"></span>
+<span class="font-label-sm text-label-sm text-on-surface">Demo</span>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<div class="flex flex-col items-end">
+<div class="flex items-center gap-sm mb-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">AI Quota</span>
+<span class="font-tabular-nums text-tabular-nums text-on-surface">78%</span>
+</div>
+<div class="w-32 h-1.5 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[78%]"></div>
+</div>
+</div>
+<button class="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant">notifications</span>
+</button>
+</div>
+</header>
+<!-- Dashboard Canvas -->
+<div class="flex-1 overflow-y-auto p-lg bg-[#F8FAFC]">
+<div class="max-w-max_width mx-auto space-y-lg pb-xl">
+<!-- Key Metrics -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-md">
+<div class="bento-card flex flex-col justify-between h-24">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant">Conversations Today</span>
+<span class="material-symbols-outlined text-[18px] text-secondary">forum</span>
+</div>
+<div class="flex items-end gap-sm">
+<span class="font-display text-display text-on-surface font-semibold">1,248</span>
+<span class="font-label-sm text-label-sm text-[#15803D] mb-1 flex items-center"><span class="material-symbols-outlined text-[14px]">arrow_upward</span> 12%</span>
+</div>
+</div>
+<div class="bento-card flex flex-col justify-between h-24">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant">Resolution Rate</span>
+<span class="material-symbols-outlined text-[18px] text-secondary">check_circle</span>
+</div>
+<div class="flex items-end gap-sm">
+<span class="font-display text-display text-on-surface font-semibold">74.0%</span>
+<span class="font-label-sm text-label-sm text-[#15803D] mb-1 flex items-center"><span class="material-symbols-outlined text-[14px]">arrow_upward</span> 2.1%</span>
+</div>
+</div>
+<div class="bento-card flex flex-col justify-between h-24">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant">Tool Success Rate</span>
+<span class="material-symbols-outlined text-[18px] text-secondary">build</span>
+</div>
+<div class="flex items-end gap-sm">
+<span class="font-display text-display text-on-surface font-semibold">98.2%</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mb-1">Avg 1.2s</span>
+</div>
+</div>
+<div class="bento-card flex flex-col justify-between h-24 border-error-container bg-error-container/10">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant">Pending Approvals</span>
+<span class="material-symbols-outlined text-[18px] text-error">rule</span>
+</div>
+<div class="flex items-end gap-sm">
+<span class="font-display text-display text-error font-semibold">12</span>
+<span class="font-label-sm text-label-sm text-error mb-1">Action Req</span>
+</div>
+</div>
+</div>
+<!-- Main Layout Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-md">
+<!-- Left Column: Charts -->
+<div class="lg:col-span-2 space-y-md">
+<div class="bento-card h-[300px] flex flex-col">
+<div class="flex items-center justify-between border-b border-outline-variant pb-sm mb-sm">
+<h3 class="font-label-md text-label-md font-semibold text-on-surface">Conversation Outcomes</h3>
+<select class="text-label-sm font-label-sm border-none bg-transparent text-on-surface-variant cursor-pointer outline-none focus:ring-0 py-0 pl-0 pr-6">
+<option>Today</option>
+<option>Last 7 Days</option>
+</select>
+</div>
+<div class="flex-1 bg-surface-container-lowest rounded-md flex items-end p-md gap-sm relative">
+<!-- Fake Chart Bar -->
+<div class="w-full h-full flex items-end gap-2 px-4 border-l border-b border-outline-variant">
+<div class="w-1/12 bg-secondary rounded-t-sm h-[40%] hover:opacity-80"></div>
+<div class="w-1/12 bg-secondary rounded-t-sm h-[60%] hover:opacity-80"></div>
+<div class="w-1/12 bg-secondary rounded-t-sm h-[30%] hover:opacity-80"></div>
+<div class="w-1/12 bg-secondary rounded-t-sm h-[80%] hover:opacity-80"></div>
+<div class="w-1/12 bg-secondary rounded-t-sm h-[50%] hover:opacity-80"></div>
+<div class="w-1/12 bg-secondary rounded-t-sm h-[90%] hover:opacity-80"></div>
+<div class="w-1/12 bg-secondary rounded-t-sm h-[70%] hover:opacity-80"></div>
+<div class="w-1/12 bg-secondary rounded-t-sm h-[45%] hover:opacity-80"></div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div class="bento-card h-[250px] flex flex-col">
+<div class="flex items-center justify-between border-b border-outline-variant pb-sm mb-sm">
+<h3 class="font-label-md text-label-md font-semibold text-on-surface">Tool Calls by Integration</h3>
+</div>
+<div class="flex-1 flex flex-col justify-center gap-sm px-md">
+<div class="flex flex-col gap-1">
+<div class="flex justify-between font-label-sm text-label-sm text-on-surface">
+<span>SwiftShip</span>
+<span class="font-tabular-nums">45%</span>
+</div>
+<div class="w-full h-2 bg-surface-variant rounded-full overflow-hidden"><div class="h-full bg-secondary w-[45%]"></div></div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between font-label-sm text-label-sm text-on-surface">
+<span>Shopify</span>
+<span class="font-tabular-nums">35%</span>
+</div>
+<div class="w-full h-2 bg-surface-variant rounded-full overflow-hidden"><div class="h-full bg-[#a375ff] w-[35%]"></div></div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between font-label-sm text-label-sm text-on-surface">
+<span>Zendesk</span>
+<span class="font-tabular-nums">20%</span>
+</div>
+<div class="w-full h-2 bg-surface-variant rounded-full overflow-hidden"><div class="h-full bg-outline w-[20%]"></div></div>
+</div>
+</div>
+</div>
+<div class="bento-card h-[250px] flex flex-col">
+<div class="flex items-center justify-between border-b border-outline-variant pb-sm mb-sm">
+<h3 class="font-label-md text-label-md font-semibold text-on-surface">Integration Health</h3>
+</div>
+<div class="flex-1 flex flex-col gap-sm overflow-y-auto pr-2">
+<div class="flex items-center justify-between p-2 rounded hover:bg-surface-container-lowest border border-transparent hover:border-outline-variant transition-colors">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#15803D]"></span>
+<span class="font-body-sm text-body-sm text-on-surface">SwiftShip API</span>
+</div>
+<span class="font-tabular-nums text-label-sm text-on-surface-variant">45ms</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded hover:bg-surface-container-lowest border border-transparent hover:border-outline-variant transition-colors">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#15803D]"></span>
+<span class="font-body-sm text-body-sm text-on-surface">Shopify GraphQL</span>
+</div>
+<span class="font-tabular-nums text-label-sm text-on-surface-variant">120ms</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded hover:bg-surface-container-lowest border border-transparent hover:border-outline-variant transition-colors">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#B45309]"></span>
+<span class="font-body-sm text-body-sm text-on-surface">Zendesk Tickets</span>
+</div>
+<span class="font-tabular-nums text-label-sm text-on-surface-variant">450ms</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Operational Panels -->
+<div class="lg:col-span-1 space-y-md">
+<!-- Pending Approvals -->
+<div class="bento-card flex flex-col border-error-container">
+<div class="flex items-center justify-between border-b border-outline-variant pb-sm mb-sm">
+<h3 class="font-label-md text-label-md font-semibold text-on-surface flex items-center gap-2">
+                                     Pending Approvals <span class="bg-error text-on-error rounded-full px-2 py-0.5 text-[10px]">12</span>
+</h3>
+<button class="text-secondary font-label-sm hover:underline">View All</button>
+</div>
+<div class="flex flex-col gap-sm">
+<div class="p-3 bg-surface-container-low rounded-lg border border-outline-variant">
+<div class="flex justify-between items-start mb-2">
+<div class="font-label-md text-label-md text-on-surface font-medium">Change Address</div>
+<span class="font-tabular-nums text-label-sm text-on-surface-variant">DEMO-1042</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-3 line-clamp-2">AI agent requests approval to update shipping address for order #8892 before dispatch.</p>
+<div class="flex gap-2">
+<button class="flex-1 bg-secondary text-on-primary py-1.5 rounded-md font-label-sm hover:opacity-90 transition-opacity">Approve</button>
+<button class="flex-1 bg-surface text-on-surface border border-outline-variant py-1.5 rounded-md font-label-sm hover:bg-surface-container-highest transition-colors">Review</button>
+</div>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg border border-outline-variant">
+<div class="flex justify-between items-start mb-2">
+<div class="font-label-md text-label-md text-on-surface font-medium">Process Refund</div>
+<span class="font-tabular-nums text-label-sm text-on-surface-variant">DEMO-1038</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-3 line-clamp-2">High value refund ($450.00) requires manual sign-off per policy.</p>
+<div class="flex gap-2">
+<button class="flex-1 bg-secondary text-on-primary py-1.5 rounded-md font-label-sm hover:opacity-90 transition-opacity">Approve</button>
+<button class="flex-1 bg-surface text-on-surface border border-outline-variant py-1.5 rounded-md font-label-sm hover:bg-surface-container-highest transition-colors">Review</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Escalations -->
+<div class="bento-card flex flex-col">
+<div class="flex items-center justify-between border-b border-outline-variant pb-sm mb-sm">
+<h3 class="font-label-md text-label-md font-semibold text-on-surface">Recent Escalations</h3>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between p-2 hover:bg-surface-container-lowest rounded border border-transparent hover:border-outline-variant transition-all cursor-pointer">
+<div>
+<div class="font-label-md text-label-md text-on-surface">Emma Weber</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-[#B91C1C]"></span> Frustrated
+                                         </div>
+</div>
+<span class="font-tabular-nums text-label-sm text-on-surface-variant">2m ago</span>
+</div>
+<div class="flex items-center justify-between p-2 hover:bg-surface-container-lowest rounded border border-transparent hover:border-outline-variant transition-all cursor-pointer">
+<div>
+<div class="font-label-md text-label-md text-on-surface">Liam Chen</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-[#B45309]"></span> Confused
+                                         </div>
+</div>
+<span class="font-tabular-nums text-label-sm text-on-surface-variant">15m ago</span>
+</div>
+</div>
+</div>
+<!-- Knowledge Status -->
+<div class="bento-card flex flex-col bg-[#F5F3FF] border-[#eaddff]">
+<div class="flex items-center justify-between border-b border-[#eaddff] pb-sm mb-sm">
+<h3 class="font-label-md text-label-md font-semibold text-[#7C3AED] flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">auto_awesome</span> Knowledge Base
+                                 </h3>
+</div>
+<div class="flex items-center justify-between">
+<div class="font-body-sm text-body-sm text-[#5a00c6]">Status: <span class="font-semibold">Synced</span></div>
+<div class="font-tabular-nums text-label-sm text-[#7C3AED]">Last indexed: 4m ago</div>
+</div>
+<button class="mt-3 w-full bg-white border border-[#eaddff] text-[#7C3AED] py-1.5 rounded-md font-label-sm hover:bg-[#eaddff]/20 transition-colors">Force Sync</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

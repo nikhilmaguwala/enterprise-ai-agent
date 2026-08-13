@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ResolveAI - Document Details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#fefcff",
+                        "secondary-fixed": "#dbe1ff",
+                        "surface": "#f8f9ff",
+                        "on-surface-variant": "#45464f",
+                        "surface-variant": "#d9e3f4",
+                        "tertiary-fixed-dim": "#d2bbff",
+                        "tertiary": "#1c0047",
+                        "on-error": "#ffffff",
+                        "primary-container": "#172554",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "background": "#f8f9ff",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#dfe9fa",
+                        "inverse-surface": "#27313e",
+                        "on-surface": "#121c28",
+                        "on-tertiary-fixed": "#25005a",
+                        "outline-variant": "#c6c5d0",
+                        "on-tertiary-fixed-variant": "#5a00c6",
+                        "tertiary-container": "#35007a",
+                        "on-primary-container": "#808dc2",
+                        "inverse-on-surface": "#eaf1ff",
+                        "outline": "#767680",
+                        "surface-dim": "#d1dbec",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "on-primary-fixed": "#071747",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#b7c4fd",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#4f5c8e",
+                        "surface-container-highest": "#d9e3f4",
+                        "on-primary-fixed-variant": "#374475",
+                        "primary-fixed": "#dce1ff",
+                        "inverse-primary": "#b7c4fd",
+                        "surface-container-low": "#eef4ff",
+                        "on-secondary-fixed": "#00174b",
+                        "secondary": "#0051d5",
+                        "on-background": "#121c28",
+                        "primary": "#000f3f",
+                        "tertiary-fixed": "#eaddff",
+                        "surface-bright": "#f8f9ff",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "on-tertiary-container": "#a375ff",
+                        "surface-container": "#e5eeff",
+                        "secondary-container": "#316bf3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "md": "16px",
+                        "xxl": "48px",
+                        "lg": "24px",
+                        "margin": "32px",
+                        "xl": "32px",
+                        "sm": "8px",
+                        "unit": "8px",
+                        "max_width": "1440px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Geist"],
+                        "body-sm": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "label-md": ["Geist"],
+                        "display": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "tabular-nums": ["Geist"],
+                        "label-sm": ["Geist"],
+                        "body-md": ["Geist"],
+                        "headline-lg-mobile": ["Geist"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "500" }],
+                        "tabular-nums": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Geist', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background flex h-screen overflow-hidden antialiased">
+<!-- SideNavBar (Knowledge Active) -->
+<nav class="hidden md:flex flex-col h-screen left-0 w-64 border-r border-outline-variant dark:border-outline bg-surface-container-low dark:bg-primary-container p-md gap-sm shrink-0 z-10">
+<div class="flex items-center gap-sm mb-lg">
+<img alt="Organization Logo" class="w-8 h-8 rounded" data-alt="A minimalist vector logo of a stylized geometric eye or shield, representing observable AI and enterprise security, rendered in sharp dark blue lines on a pristine white background with no gradients." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBY7Ex7kRdc4NZ9HSGJU6pw3Xj5mcN43kjJ3ptjYELZHMGmcKm1_3OI_AT9t32h8l0ccW0oFPbeBAd7Hvk0fdJ4XmTWaOn5Fh9sRgDWddfivBXAMjuVlNYdKaypzTy7-DwgcsxAwoBX06gRugkXzGGePcDDqUo4XcdOmKQD1f0Go1rjCh8Rg04sjyVPXAWJFGKDxP4ZpJ3DnAYlPN0MVxDTM0yQim4SOVj2vb18fRPFAqhTtVFpa109pw"/>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">ResolveAI</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Enterprise Support</p>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto flex flex-col gap-xs">
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg hover:bg-surface-container-high dark:hover:bg-primary transition-all duration-150" href="#">
+<span class="material-symbols-outlined font-label-md text-label-md">dashboard</span>
+<span class="font-label-md text-label-md">Overview</span>
+</a>
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg hover:bg-surface-container-high dark:hover:bg-primary transition-all duration-150" href="#">
+<span class="material-symbols-outlined font-label-md text-label-md">forum</span>
+<span class="font-label-md text-label-md">Conversations</span>
+</a>
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg hover:bg-surface-container-high dark:hover:bg-primary transition-all duration-150" href="#">
+<span class="material-symbols-outlined font-label-md text-label-md">inbox</span>
+<span class="font-label-md text-label-md">Support Inbox</span>
+</a>
+<a class="flex items-center gap-md p-sm bg-secondary-container text-on-secondary-container font-bold rounded-lg hover:bg-surface-container-high dark:hover:bg-primary transition-all duration-150" href="#">
+<span class="material-symbols-outlined font-label-md text-label-md" style="font-variation-settings: 'FILL' 1;">database</span>
+<span class="font-label-md text-label-md">Knowledge</span>
+</a>
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg hover:bg-surface-container-high dark:hover:bg-primary transition-all duration-150" href="#">
+<span class="material-symbols-outlined font-label-md text-label-md">bolt</span>
+<span class="font-label-md text-label-md">Agent Runs</span>
+</a>
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg hover:bg-surface-container-high dark:hover:bg-primary transition-all duration-150" href="#">
+<span class="material-symbols-outlined font-label-md text-label-md">rule</span>
+<span class="font-label-md text-label-md">Approvals</span>
+</a>
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg hover:bg-surface-container-high dark:hover:bg-primary transition-all duration-150" href="#">
+<span class="material-symbols-outlined font-label-md text-label-md">analytics</span>
+<span class="font-label-md text-label-md">Evaluations</span>
+</a>
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg hover:bg-surface-container-high dark:hover:bg-primary transition-all duration-150" href="#">
+<span class="material-symbols-outlined font-label-md text-label-md">settings_input_component</span>
+<span class="font-label-md text-label-md">Operations</span>
+</a>
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg hover:bg-surface-container-high dark:hover:bg-primary transition-all duration-150" href="#">
+<span class="material-symbols-outlined font-label-md text-label-md">history</span>
+<span class="font-label-md text-label-md">Audit Log</span>
+</a>
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg hover:bg-surface-container-high dark:hover:bg-primary transition-all duration-150" href="#">
+<span class="material-symbols-outlined font-label-md text-label-md">extension</span>
+<span class="font-label-md text-label-md">Integrations</span>
+</a>
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg hover:bg-surface-container-high dark:hover:bg-primary transition-all duration-150" href="#">
+<span class="material-symbols-outlined font-label-md text-label-md">group</span>
+<span class="font-label-md text-label-md">Team</span>
+</a>
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg hover:bg-surface-container-high dark:hover:bg-primary transition-all duration-150" href="#">
+<span class="material-symbols-outlined font-label-md text-label-md">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+<div class="mt-auto border-t border-outline-variant pt-sm flex flex-col gap-xs">
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg hover:bg-surface-container-high dark:hover:bg-primary transition-all duration-150" href="#">
+<span class="material-symbols-outlined font-label-md text-label-md">help</span>
+<span class="font-label-md text-label-md">Help</span>
+</a>
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg hover:bg-surface-container-high dark:hover:bg-primary transition-all duration-150" href="#">
+<span class="material-symbols-outlined font-label-md text-label-md">logout</span>
+<span class="font-label-md text-label-md">Logout</span>
+</a>
+</div>
+</nav>
+<!-- Main Canvas -->
+<main class="flex-1 flex flex-col overflow-hidden bg-background">
+<!-- Header -->
+<header class="h-[72px] flex items-center justify-between px-lg border-b border-outline-variant bg-surface shrink-0">
+<div class="flex items-center gap-md">
+<button class="md:hidden text-on-surface p-sm hover:bg-surface-container-low rounded-full transition-colors">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="flex items-center text-sm font-label-md text-on-surface-variant gap-xs">
+<a class="hover:text-secondary transition-colors" href="#">Knowledge</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<a class="hover:text-secondary transition-colors" href="#">Policies</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-on-surface font-semibold">EMP-2024-Remote-Work</span>
+</div>
+</div>
+<div class="flex items-center gap-sm">
+<button class="bg-secondary text-on-secondary px-md py-[6px] rounded flex items-center gap-xs font-label-md hover:bg-primary transition-colors border border-transparent shadow-sm">
+<span class="material-symbols-outlined text-[18px]">sync</span>
+                    Reindex
+                </button>
+<button class="bg-surface-container-lowest border border-outline-variant text-on-surface px-md py-[6px] rounded flex items-center gap-xs font-label-md hover:bg-surface-container-low hover:border-secondary transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">archive</span>
+                    Archive
+                </button>
+<button class="text-error hover:bg-error-container p-[6px] rounded flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-lg lg:p-xl">
+<div class="max-w-max_width mx-auto grid grid-cols-1 xl:grid-cols-12 gap-lg h-full">
+<!-- Left Column: Document Details & Content -->
+<div class="xl:col-span-8 flex flex-col gap-lg">
+<!-- Metadata Header Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-lg shadow-sm">
+<div class="flex items-start justify-between mb-md">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-xs">Global Remote Work Policy v2.4</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-sm">
+<span class="material-symbols-outlined text-[16px]">description</span>
+                                    PDF Document
+                                    <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+                                    2.4 MB
+                                </p>
+</div>
+<div class="flex items-center gap-xs bg-surface-container-high px-sm py-xs rounded text-success font-label-sm">
+<span class="w-2 h-2 rounded-full bg-[#15803D]"></span>
+<span class="text-[#15803D]">Indexed Successfully</span>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-md pt-md border-t border-outline-variant">
+<div>
+<span class="block font-label-sm text-on-surface-variant mb-xs">SOURCE</span>
+<span class="font-body-sm text-on-surface flex items-center gap-xs">
+<img alt="Drive" class="w-4 h-4" data-alt="A tiny minimalist icon representing Google Drive, clean lines, professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXkbnE3N4qVUGg6bgx978Ws5IT7nRQErn4E_4Psx2MG4_7VPFpBhFdDxPqxzoXNGltiJhjVEAwVMx1rOaLH_q2ntqbL9c5pIkQWaYI3gijxM2nzwU0sfRjq5CgYaTfhDANH5Hjb2mbqDye4SDih3TpiPR-sBtpiXgEff2EQ3Y8F49p4a0sj5pbCTnKFLEvFVWL_7jSdq9O8SaXN2ODcRpUvg4dWguRTayVy67Uq9RjpNj1WiFvnHgIMQ"/> HR Shared Drive
+                                </span>
+</div>
+<div>
+<span class="block font-label-sm text-on-surface-variant mb-xs">LAST INDEXED</span>
+<span class="font-body-sm text-on-surface">Oct 24, 2024 14:32</span>
+</div>
+<div>
+<span class="block font-label-sm text-on-surface-variant mb-xs">CHUNKS</span>
+<span class="font-body-sm text-on-surface">142</span>
+</div>
+<div>
+<span class="block font-label-sm text-on-surface-variant mb-xs">TOKENS</span>
+<span class="font-body-sm text-on-surface">8,405</span>
+</div>
+</div>
+</div>
+<!-- Chunks Preview / Content -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg flex flex-col flex-1 shadow-sm overflow-hidden">
+<div class="px-lg py-md border-b border-outline-variant bg-surface-bright flex items-center justify-between">
+<h3 class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-primary-container">data_object</span>
+                                Indexed Chunks
+                            </h3>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+<input class="pl-[32px] pr-sm py-xs border border-outline-variant rounded bg-surface-container-lowest font-body-sm text-body-sm focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/10 transition-all w-64" placeholder="Search chunks..." type="text"/>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto bg-surface p-md flex flex-col gap-sm">
+<!-- Chunk 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded p-md hover:border-secondary transition-colors group">
+<div class="flex justify-between items-start mb-sm">
+<span class="font-tabular-nums text-tabular-nums text-on-surface-variant text-xs bg-surface-container px-xs py-[2px] rounded">Chunk_001</span>
+<button class="opacity-0 group-hover:opacity-100 text-on-surface-variant hover:text-secondary transition-all">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+</div>
+<h4 class="font-label-md text-label-md text-on-surface mb-xs">1.0 Purpose and Scope</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                                    This policy establishes guidelines for remote work arrangements at ResolveAI. It applies to all full-time and part-time employees. The company recognizes that remote work can improve productivity, reduce environmental impact, and provide a better work-life balance for eligible team members...
+                                </p>
+</div>
+<!-- Chunk 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded p-md hover:border-secondary transition-colors group">
+<div class="flex justify-between items-start mb-sm">
+<span class="font-tabular-nums text-tabular-nums text-on-surface-variant text-xs bg-surface-container px-xs py-[2px] rounded">Chunk_002</span>
+<button class="opacity-0 group-hover:opacity-100 text-on-surface-variant hover:text-secondary transition-all">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+</div>
+<h4 class="font-label-md text-label-md text-on-surface mb-xs">2.1 Eligibility Criteria</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                                    Employees are eligible for remote work if their core responsibilities do not require physical presence in the office. Eligibility is subject to approval by the direct manager and HR department. Employees must have a history of satisfactory performance to be considered...
+                                </p>
+</div>
+<!-- Chunk 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded p-md hover:border-secondary transition-colors group">
+<div class="flex justify-between items-start mb-sm">
+<span class="font-tabular-nums text-tabular-nums text-on-surface-variant text-xs bg-surface-container px-xs py-[2px] rounded">Chunk_003</span>
+<button class="opacity-0 group-hover:opacity-100 text-on-surface-variant hover:text-secondary transition-all">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+</div>
+<h4 class="font-label-md text-label-md text-on-surface mb-xs">3.0 Equipment and Security</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                                    The company will provide necessary hardware, including a laptop and secure VPN access. Remote employees must adhere to the standard IT Security Policy (IT-SEC-01). Public Wi-Fi networks must not be used without the active company VPN connection to ensure data encryption...
+                                </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Sidebar (Retrieval Activity & History) -->
+<div class="xl:col-span-4 flex flex-col gap-lg">
+<!-- Retrieval Activity Panel -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-lg shadow-sm">
+<h3 class="font-label-md text-label-md text-on-surface font-semibold mb-md flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary">monitoring</span>
+                            Retrieval Activity (30 Days)
+                        </h3>
+<div class="flex items-end gap-md mb-lg">
+<div class="font-display text-display text-on-surface leading-none">842</div>
+<div class="flex flex-col pb-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Citations</span>
+<span class="font-label-sm text-label-sm text-[#15803D] flex items-center">
+<span class="material-symbols-outlined text-[14px]">trending_up</span> 12% vs last month
+                                </span>
+</div>
+</div>
+<!-- Mini Chart Placeholder -->
+<div class="h-24 w-full bg-surface-container rounded border border-outline-variant flex items-end justify-between px-sm pt-sm pb-1 mb-md">
+<div class="w-1/12 bg-secondary/20 hover:bg-secondary/40 transition-colors h-[20%] rounded-t"></div>
+<div class="w-1/12 bg-secondary/40 hover:bg-secondary/60 transition-colors h-[40%] rounded-t"></div>
+<div class="w-1/12 bg-secondary/30 hover:bg-secondary/50 transition-colors h-[30%] rounded-t"></div>
+<div class="w-1/12 bg-secondary/60 hover:bg-secondary/80 transition-colors h-[60%] rounded-t"></div>
+<div class="w-1/12 bg-secondary/50 hover:bg-secondary/70 transition-colors h-[50%] rounded-t"></div>
+<div class="w-1/12 bg-secondary/80 hover:bg-secondary transition-colors h-[80%] rounded-t"></div>
+<div class="w-1/12 bg-secondary hover:bg-primary transition-colors h-[100%] rounded-t"></div>
+</div>
+<div class="border-t border-outline-variant pt-md">
+<h4 class="font-label-sm text-label-sm text-on-surface-variant mb-sm">TOP QUERY TOPICS</h4>
+<div class="flex flex-wrap gap-xs">
+<span class="bg-[#F5F3FF] text-[#7C3AED] px-sm py-[2px] rounded-full font-label-sm text-[11px] flex items-center gap-xs border border-[#7C3AED]/20">
+<span class="material-symbols-outlined text-[12px]">auto_awesome</span> VPN Setup
+                                </span>
+<span class="bg-surface-container-high text-on-surface px-sm py-[2px] rounded-full font-label-sm text-[11px]">Hardware Request</span>
+<span class="bg-surface-container-high text-on-surface px-sm py-[2px] rounded-full font-label-sm text-[11px]">Core Hours</span>
+</div>
+</div>
+</div>
+<!-- Version History -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-lg shadow-sm flex-1">
+<h3 class="font-label-md text-label-md text-on-surface font-semibold mb-md flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant">history</span>
+                            Version History
+                        </h3>
+<div class="relative pl-sm border-l border-outline-variant ml-sm flex flex-col gap-md">
+<!-- Current Version -->
+<div class="relative">
+<div class="absolute -left-[21px] top-1 w-3 h-3 bg-secondary rounded-full border-2 border-surface-container-lowest"></div>
+<div class="font-label-md text-label-md text-on-surface">v2.4 (Current)</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Oct 24, 2024 • Re-indexed via Sync</div>
+<div class="font-label-sm text-label-sm text-secondary mt-xs cursor-pointer hover:underline">View Source</div>
+</div>
+<!-- Previous Version -->
+<div class="relative">
+<div class="absolute -left-[21px] top-1 w-3 h-3 bg-outline-variant rounded-full border-2 border-surface-container-lowest"></div>
+<div class="font-label-md text-label-md text-on-surface-variant">v2.3</div>
+<div class="font-body-sm text-body-sm text-outline">Sep 12, 2024 • Manual Upload</div>
+</div>
+<!-- Previous Version -->
+<div class="relative">
+<div class="absolute -left-[21px] top-1 w-3 h-3 bg-outline-variant rounded-full border-2 border-surface-container-lowest"></div>
+<div class="font-label-md text-label-md text-on-surface-variant">v2.2</div>
+<div class="font-body-sm text-body-sm text-outline">Jan 05, 2024 • Initial Index</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

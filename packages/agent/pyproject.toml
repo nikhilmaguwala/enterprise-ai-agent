@@ -1,0 +1,20 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "enterprise-agent"
+version = "0.1.0"
+description = "LangGraph agent workflow for Enterprise AI Support"
+requires-python = ">=3.12"
+dependencies = [
+  "langchain-core>=0.3",
+  "langgraph>=0.2",
+  "pydantic>=2.0",
+  "enterprise-domain",
+  "enterprise-integrations",
+  "enterprise-knowledge",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/enterprise_agent"]

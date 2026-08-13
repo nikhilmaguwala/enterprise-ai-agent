@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Escalation Review - ResolveAI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-fixed": "#00174b",
+                      "on-error-container": "#93000a",
+                      "tertiary-fixed": "#eaddff",
+                      "secondary-container": "#316bf3",
+                      "outline-variant": "#c6c5d0",
+                      "tertiary": "#1c0047",
+                      "on-background": "#121c28",
+                      "surface-bright": "#f8f9ff",
+                      "background": "#f8f9ff",
+                      "inverse-primary": "#b7c4fd",
+                      "on-tertiary": "#ffffff",
+                      "primary": "#000f3f",
+                      "on-surface": "#121c28",
+                      "on-tertiary-container": "#a375ff",
+                      "error": "#ba1a1a",
+                      "on-tertiary-fixed-variant": "#5a00c6",
+                      "on-primary-container": "#808dc2",
+                      "on-primary-fixed-variant": "#374475",
+                      "on-error": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "tertiary-fixed-dim": "#d2bbff",
+                      "primary-fixed-dim": "#b7c4fd",
+                      "inverse-on-surface": "#eaf1ff",
+                      "surface-container-high": "#dfe9fa",
+                      "on-secondary-fixed-variant": "#003ea8",
+                      "inverse-surface": "#27313e",
+                      "error-container": "#ffdad6",
+                      "outline": "#767680",
+                      "on-surface-variant": "#45464f",
+                      "tertiary-container": "#35007a",
+                      "primary-fixed": "#dce1ff",
+                      "on-tertiary-fixed": "#25005a",
+                      "secondary-fixed-dim": "#b4c5ff",
+                      "surface-container": "#e5eeff",
+                      "surface": "#f8f9ff",
+                      "secondary": "#0051d5",
+                      "surface-variant": "#d9e3f4",
+                      "on-primary-fixed": "#071747",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-tint": "#4f5c8e",
+                      "on-secondary-container": "#fefcff",
+                      "surface-dim": "#d1dbec",
+                      "primary-container": "#172554",
+                      "secondary-fixed": "#dbe1ff",
+                      "on-primary": "#ffffff",
+                      "surface-container-highest": "#d9e3f4",
+                      "surface-container-low": "#eef4ff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sm": "8px",
+                      "margin": "32px",
+                      "lg": "24px",
+                      "xxl": "48px",
+                      "xl": "32px",
+                      "gutter": "24px",
+                      "md": "16px",
+                      "max_width": "1440px",
+                      "xs": "4px",
+                      "unit": "8px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": [
+                              "Geist"
+                      ],
+                      "headline-lg": [
+                              "Geist"
+                      ],
+                      "tabular-nums": [
+                              "Geist"
+                      ],
+                      "body-sm": [
+                              "Geist"
+                      ],
+                      "label-sm": [
+                              "Geist"
+                      ],
+                      "label-md": [
+                              "Geist"
+                      ],
+                      "body-md": [
+                              "Geist"
+                      ],
+                      "body-lg": [
+                              "Geist"
+                      ],
+                      "display": [
+                              "Geist"
+                      ],
+                      "headline-md": [
+                              "Geist"
+                      ]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "tabular-nums": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.01em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap');
+        body { font-family: 'Geist', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background h-full flex overflow-hidden">
+<!-- SideNavBar -->
+<nav class="bg-surface-container-low dark:bg-primary-container border-r border-outline-variant dark:border-outline flex flex-col h-full p-md gap-sm w-64 flex-shrink-0 hidden md:flex">
+<div class="mb-lg px-sm">
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">ResolveAI</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Enterprise Support</p>
+</div>
+<div class="flex-1 overflow-y-auto space-y-xs">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Overview
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+                Conversations
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg bg-secondary-container text-on-secondary-container font-bold transition-all duration-150 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="inbox">inbox</span>
+                Support Inbox
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="database">database</span>
+                Knowledge
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+                Agent Runs
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="rule">rule</span>
+                Approvals
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+                Evaluations
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="settings_input_component">settings_input_component</span>
+                Operations
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+                Audit Log
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="extension">extension</span>
+                Integrations
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+                Team
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Settings
+            </a>
+</div>
+<div class="mt-auto border-t border-outline-variant pt-sm">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+                Help
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all duration-150 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                Logout
+            </a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col h-full bg-background overflow-hidden">
+<!-- Header -->
+<header class="h-16 border-b border-outline-variant bg-surface flex items-center px-lg justify-between flex-shrink-0">
+<div class="flex items-center gap-md">
+<h2 class="font-headline-md text-headline-md text-on-surface">Escalation: #8942 - Emma Weber</h2>
+<span class="bg-[#B45309] bg-opacity-10 text-[#B45309] font-label-sm text-label-sm px-2 py-1 rounded-full flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-[#B45309]"></span>
+                    Frustrated
+                </span>
+<span class="bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm px-2 py-1 rounded-full">
+                    Billing Issue
+                </span>
+</div>
+<div class="flex gap-sm">
+<button class="px-md py-sm rounded-DEFAULT border border-outline-variant text-on-surface bg-surface hover:bg-surface-container-low font-label-md text-label-md transition-colors flex items-center gap-sm">
+<span class="material-symbols-outlined text-[18px]">share</span>
+                    Share
+                </button>
+<button class="px-md py-sm rounded-DEFAULT border border-outline-variant text-on-surface bg-surface hover:bg-surface-container-low font-label-md text-label-md transition-colors flex items-center gap-sm">
+<span class="material-symbols-outlined text-[18px]">done</span>
+                    Resolve
+                </button>
+</div>
+</header>
+<!-- 3-Column Workspace -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Left: Conversation Timeline -->
+<section class="w-[350px] border-r border-outline-variant bg-surface-container-lowest flex flex-col h-full overflow-hidden shrink-0">
+<div class="p-md border-b border-outline-variant bg-surface-container-low font-label-md text-label-md text-on-surface-variant flex items-center justify-between">
+<span>Conversation Timeline</span>
+<span class="material-symbols-outlined text-[18px]">history</span>
+</div>
+<div class="flex-1 overflow-y-auto p-md space-y-lg">
+<!-- Customer Message -->
+<div class="flex gap-md">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center shrink-0">
+<span class="font-label-md text-on-surface">EW</span>
+</div>
+<div>
+<div class="flex items-baseline gap-sm mb-xs">
+<span class="font-label-md text-on-surface">Emma Weber</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant text-[12px]">10:42 AM</span>
+</div>
+<div class="bg-surface-container-low p-sm rounded-lg rounded-tl-none font-body-sm text-body-sm text-on-surface border border-outline-variant">
+                                I've been charged twice for my premium subscription this month. I need a refund immediately. This is unacceptable.
+                            </div>
+</div>
+</div>
+<!-- AI Agent Reply -->
+<div class="flex gap-md">
+<div class="w-8 h-8 rounded-full bg-[#F5F3FF] border border-[#7C3AED] flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[#7C3AED] text-[16px]">smart_toy</span>
+</div>
+<div>
+<div class="flex items-baseline gap-sm mb-xs">
+<span class="font-label-md text-[#7C3AED]">Resolve Bot</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant text-[12px]">10:43 AM</span>
+</div>
+<div class="bg-[#F5F3FF] p-sm rounded-lg rounded-tl-none font-body-sm text-body-sm text-[#7C3AED] border border-[#eaddff]">
+                                I apologize for the inconvenience, Emma. I can help you look into this billing issue. Could you please provide the last 4 digits of the card charged?
+                            </div>
+</div>
+</div>
+<!-- Customer Message -->
+<div class="flex gap-md">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center shrink-0">
+<span class="font-label-md text-on-surface">EW</span>
+</div>
+<div>
+<div class="flex items-baseline gap-sm mb-xs">
+<span class="font-label-md text-on-surface">Emma Weber</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant text-[12px]">10:45 AM</span>
+</div>
+<div class="bg-surface-container-low p-sm rounded-lg rounded-tl-none font-body-sm text-body-sm text-on-surface border border-outline-variant">
+                                It's 4921. Just refund the extra charge, please.
+                            </div>
+</div>
+</div>
+<!-- AI Action/System Message -->
+<div class="flex gap-md items-center justify-center py-sm">
+<div class="bg-surface-container px-md py-xs rounded-full border border-outline-variant flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant text-[14px]">search</span>
+<span class="font-body-sm text-body-sm text-[12px] text-on-surface-variant">Bot checked Stripe records</span>
+</div>
+</div>
+<!-- AI Agent Reply (Escalation) -->
+<div class="flex gap-md">
+<div class="w-8 h-8 rounded-full bg-[#F5F3FF] border border-[#7C3AED] flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[#7C3AED] text-[16px]">smart_toy</span>
+</div>
+<div>
+<div class="flex items-baseline gap-sm mb-xs">
+<span class="font-label-md text-[#7C3AED]">Resolve Bot</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant text-[12px]">10:46 AM</span>
+</div>
+<div class="bg-[#F5F3FF] p-sm rounded-lg rounded-tl-none font-body-sm text-body-sm text-[#7C3AED] border border-[#eaddff]">
+                                Thank you. I see the two charges. However, one of them seems to be linked to a pro-rated team upgrade from last week. Let me connect you with a human agent who can process this specific refund request.
+                            </div>
+</div>
+</div>
+</div>
+</section>
+<!-- Center: AI Handoff & Summary -->
+<section class="flex-1 bg-surface flex flex-col overflow-y-auto">
+<div class="p-xl max-w-3xl mx-auto w-full space-y-lg">
+<!-- AI Handoff Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden shadow-[0px_4px_12px_rgba(17,24,39,0.05)]">
+<div class="bg-[#F5F3FF] p-md border-b border-outline-variant flex items-center gap-sm">
+<span class="material-symbols-outlined text-[#7C3AED]">auto_awesome</span>
+<h3 class="font-label-md text-label-md text-[#7C3AED] uppercase tracking-wider">AI Handoff Summary</h3>
+</div>
+<div class="p-md space-y-md">
+<div>
+<h4 class="font-label-sm text-label-sm text-on-surface-variant mb-xs">Issue Description</h4>
+<p class="font-body-md text-body-md text-on-surface">Customer is reporting a double charge for the current month's premium subscription. Bot identified one charge as a regular renewal and the other as a potential pro-rated team upgrade charge.</p>
+</div>
+<div class="grid grid-cols-2 gap-md pt-sm border-t border-outline-variant">
+<div>
+<h4 class="font-label-sm text-label-sm text-on-surface-variant mb-xs">Customer Sentiment</h4>
+<div class="flex items-center gap-sm">
+<span class="w-3 h-3 rounded-full bg-[#B45309]"></span>
+<span class="font-body-md text-body-md text-on-surface">Frustrated</span>
+</div>
+</div>
+<div>
+<h4 class="font-label-sm text-label-sm text-on-surface-variant mb-xs">Detected Intent</h4>
+<span class="font-body-md text-body-md text-on-surface">Billing Inquiry / Refund Request</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Recommended Actions -->
+<div class="space-y-md">
+<h3 class="font-label-md text-label-md text-on-surface">Recommended Next Actions</h3>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md hover:bg-surface-container-low transition-colors cursor-pointer group flex items-start gap-md">
+<div class="mt-1 w-6 h-6 rounded-full bg-[#15803D] bg-opacity-10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[#15803D] text-[14px]">check</span>
+</div>
+<div class="flex-1">
+<h4 class="font-label-md text-label-md text-on-surface group-hover:text-primary transition-colors">Approve Pro-rated Refund</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Issue a $14.50 refund for the disputed team upgrade charge to resolve the complaint immediately.</p>
+</div>
+<button class="px-md py-sm bg-surface-container-highest rounded font-label-sm text-label-sm text-on-surface group-hover:bg-[#2563EB] group-hover:text-white transition-colors">Apply</button>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md hover:bg-surface-container-low transition-colors cursor-pointer group flex items-start gap-md">
+<div class="mt-1 w-6 h-6 rounded-full bg-surface-container-highest flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-surface-variant text-[14px]">info</span>
+</div>
+<div class="flex-1">
+<h4 class="font-label-md text-label-md text-on-surface group-hover:text-primary transition-colors">Clarify Charges</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Send a detailed breakdown of the recent invoice explaining the pro-rated amount before issuing any refund.</p>
+</div>
+<button class="px-md py-sm bg-surface-container-highest rounded font-label-sm text-label-sm text-on-surface group-hover:bg-[#2563EB] group-hover:text-white transition-colors">Apply</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Right: Controls & Composer -->
+<section class="w-[320px] border-l border-outline-variant bg-surface-container-lowest flex flex-col h-full shrink-0">
+<!-- Assignment Info -->
+<div class="p-md border-b border-outline-variant bg-surface-container-low">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant mb-md uppercase tracking-wider">Ticket Details</h3>
+<div class="space-y-sm">
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Assignee</span>
+<div class="flex items-center gap-xs cursor-pointer hover:bg-surface-container p-1 rounded">
+<div class="w-5 h-5 rounded-full bg-[#2563EB] text-white flex items-center justify-center font-label-sm text-[10px]">JD</div>
+<span class="font-body-sm text-body-sm text-on-surface">Jane Doe</span>
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant">expand_more</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Priority</span>
+<div class="flex items-center gap-xs cursor-pointer hover:bg-surface-container p-1 rounded">
+<span class="w-2 h-2 rounded-full bg-[#B45309]"></span>
+<span class="font-body-sm text-body-sm text-on-surface">High</span>
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant">expand_more</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Time in Queue</span>
+<span class="font-body-sm text-body-sm text-on-surface">14m</span>
+</div>
+</div>
+</div>
+<!-- Customer Context -->
+<div class="p-md border-b border-outline-variant flex-1 overflow-y-auto">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant mb-md uppercase tracking-wider">Customer Context</h3>
+<div class="space-y-md">
+<div>
+<span class="block font-body-sm text-body-sm text-on-surface-variant">Plan</span>
+<span class="font-body-md text-body-md text-on-surface font-medium">Pro Team (Monthly)</span>
+</div>
+<div>
+<span class="block font-body-sm text-body-sm text-on-surface-variant">LTV</span>
+<span class="font-body-md text-body-md text-on-surface">$1,240.00</span>
+</div>
+<div>
+<span class="block font-body-sm text-body-sm text-on-surface-variant">Recent Interactions</span>
+<ul class="mt-xs space-y-xs">
+<li class="font-body-sm text-body-sm text-on-surface flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant">mail</span>
+                                    Password Reset (2 days ago)
+                                </li>
+</ul>
+</div>
+</div>
+</div>
+<!-- Reply Composer -->
+<div class="p-md bg-surface border-t border-outline-variant mt-auto flex flex-col gap-sm">
+<div class="flex items-center justify-between mb-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Reply as Human</span>
+<button class="text-[#7C3AED] hover:bg-[#F5F3FF] p-1 rounded transition-colors flex items-center gap-xs font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">auto_awesome</span>
+                            Draft with AI
+                        </button>
+</div>
+<textarea class="w-full bg-surface-container-lowest border border-outline-variant rounded-DEFAULT p-sm font-body-sm text-body-sm text-on-surface focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB] focus:ring-opacity-10 outline-none resize-none h-32" placeholder="Type your reply to Emma..."></textarea>
+<div class="flex justify-between items-center mt-xs">
+<div class="flex gap-xs">
+<button class="p-1 text-on-surface-variant hover:bg-surface-container-high rounded transition-colors">
+<span class="material-symbols-outlined text-[18px]">attach_file</span>
+</button>
+<button class="p-1 text-on-surface-variant hover:bg-surface-container-high rounded transition-colors">
+<span class="material-symbols-outlined text-[18px]">article</span>
+</button>
+</div>
+<button class="px-md py-sm bg-[#2563EB] text-white rounded-DEFAULT font-label-md text-label-md hover:bg-opacity-90 transition-colors shadow-[0px_4px_12px_rgba(17,24,39,0.05)]">
+                            Send Reply
+                        </button>
+</div>
+</div>
+</section>
+</div>
+</main>
+</body></html>

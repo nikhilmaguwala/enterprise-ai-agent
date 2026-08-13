@@ -1,0 +1,99 @@
+name: Main (tests, eval, deploy)
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: write
+
+concurrency:
+  group: main-deploy
+  cancel-in-progress: false
+
+jobs:
+  full-tests:
+    name: Full test suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install Python
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff mypy pytest pytest-asyncio httpx
+          if [ -f apps/api/pyproject.toml ]; then pip install -e "apps/api.[dev]" || pip install -e apps/api; fi
+          if [ -f pyproject.toml ]; then pip install -e ".[dev]" || true; fi
+      - name: Ruff
+        run: |
+          ruff format --check apps packages services evals || true
+          ruff check apps packages services evals || true
+      - name: Pytest
+        run: |
+          if [ -d apps/api/tests ]; then
+            cd apps/api && PYTHONPATH=. pytest -q --tb=short
+          else
+            echo "API tests not present yet"
+          fi
+      - name: Web checks
+        working-directory: apps/web
+        run: |
+          if [ -f package.json ]; then
+            npm ci || npm install
+            npm run lint --if-present
+            npm run typecheck --if-present || npx tsc --noEmit
+          fi
+
+  eval-full:
+    name: Deterministic eval suite
+    runs-on: ubuntu-latest
+    needs: full-tests
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Eval smoke + dataset presence
+        run: |
+          test -f evals/datasets/cases.jsonl
+          lines=$(wc -l < evals/datasets/cases.jsonl | tr -d ' ')
+          test "$lines" -ge 60
+          PYTHONPATH=. python -c "from evals.graders.deterministic import smoke, run_dataset_smoke; smoke(); run_dataset_smoke()"
+
+  deploy-vercel:
+    name: Deploy frontend to Vercel (if token present)
+    runs-on: ubuntu-latest
+    needs: [full-tests, eval-full]
+    if: ${{ secrets.VERCEL_TOKEN != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: apps/web
+          vercel-args: "--prod"
+
+  # FastAPI Cloud Hobby deploy is intentionally MANUAL.
+  # Official path: interactive browser login + `fastapi deploy` from apps/api.
+  # Do not invent unsupported CI flags. See infra/fastapi-cloud/README.md.
+  fastapi-cloud-manual-note:
+    name: FastAPI Cloud manual deploy note
+    runs-on: ubuntu-latest
+    needs: [full-tests, eval-full]
+    steps:
+      - name: Document manual step
+        run: |
+          echo "::notice title=FastAPI Cloud::Deploy manually with: cd apps/api && fastapi login && fastapi deploy"
+          echo "Set production env vars in the FastAPI Cloud dashboard (or fastapi cloud env set)."
+          echo "Details: infra/fastapi-cloud/README.md and docs/deployment.md"

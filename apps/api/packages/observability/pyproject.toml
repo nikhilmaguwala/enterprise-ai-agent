@@ -1,0 +1,17 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "enterprise-observability"
+version = "0.1.0"
+description = "Metrics helpers and optional Langfuse wrapper"
+requires-python = ">=3.12"
+dependencies = [
+  "prometheus-client>=0.20",
+  "opentelemetry-api>=1.24",
+  "structlog>=24.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/enterprise_observability"]

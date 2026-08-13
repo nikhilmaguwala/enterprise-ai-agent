@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ResolveAI - Security Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-fixed-variant": "#003ea8",
+                      "tertiary": "#1c0047",
+                      "on-primary-fixed": "#071747",
+                      "primary-fixed": "#dce1ff",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary-fixed": "#25005a",
+                      "outline": "#767680",
+                      "tertiary-fixed": "#eaddff",
+                      "on-surface": "#121c28",
+                      "error-container": "#ffdad6",
+                      "on-tertiary-fixed-variant": "#5a00c6",
+                      "on-secondary-fixed": "#00174b",
+                      "tertiary-container": "#35007a",
+                      "surface-container": "#e5eeff",
+                      "surface-bright": "#f8f9ff",
+                      "on-tertiary-container": "#a375ff",
+                      "surface-container-highest": "#d9e3f4",
+                      "on-primary-container": "#808dc2",
+                      "surface-container-low": "#eef4ff",
+                      "on-primary": "#ffffff",
+                      "on-background": "#121c28",
+                      "secondary-fixed": "#dbe1ff",
+                      "primary-container": "#172554",
+                      "on-tertiary": "#ffffff",
+                      "surface": "#f8f9ff",
+                      "on-surface-variant": "#45464f",
+                      "secondary-fixed-dim": "#b4c5ff",
+                      "surface-variant": "#d9e3f4",
+                      "surface-dim": "#d1dbec",
+                      "outline-variant": "#c6c5d0",
+                      "surface-tint": "#4f5c8e",
+                      "primary": "#000f3f",
+                      "primary-fixed-dim": "#b7c4fd",
+                      "error": "#ba1a1a",
+                      "surface-container-lowest": "#ffffff",
+                      "on-error": "#ffffff",
+                      "inverse-surface": "#27313e",
+                      "secondary-container": "#316bf3",
+                      "background": "#f8f9ff",
+                      "on-primary-fixed-variant": "#374475",
+                      "on-secondary-container": "#fefcff",
+                      "surface-container-high": "#dfe9fa",
+                      "inverse-primary": "#b7c4fd",
+                      "tertiary-fixed-dim": "#d2bbff",
+                      "inverse-on-surface": "#eaf1ff",
+                      "on-error-container": "#93000a",
+                      "secondary": "#0051d5"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "unit": "8px",
+                      "lg": "24px",
+                      "max_width": "1440px",
+                      "sm": "8px",
+                      "xs": "4px",
+                      "xxl": "48px",
+                      "md": "16px",
+                      "gutter": "24px",
+                      "xl": "32px",
+                      "margin": "32px"
+              },
+              "fontFamily": {
+                      "body-md": [
+                              "Geist"
+                      ],
+                      "headline-lg-mobile": [
+                              "Geist"
+                      ],
+                      "label-sm": [
+                              "Geist"
+                      ],
+                      "tabular-nums": [
+                              "Geist"
+                      ],
+                      "label-md": [
+                              "Geist"
+                      ],
+                      "headline-lg": [
+                              "Geist"
+                      ],
+                      "headline-md": [
+                              "Geist"
+                      ],
+                      "body-lg": [
+                              "Geist"
+                      ],
+                      "body-sm": [
+                              "Geist"
+                      ],
+                      "display": [
+                              "Geist"
+                      ]
+              },
+              "fontSize": {
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "tabular-nums": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.01em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap');
+        body { font-family: 'Geist', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background h-full flex overflow-hidden">
+<!-- SideNavBar -->
+<nav class="bg-primary dark:bg-primary h-screen w-64 fixed left-0 top-0 border-r border-outline-variant flex flex-col h-full py-md px-sm z-20">
+<div class="mb-xl px-sm flex items-center gap-unit">
+<div class="w-8 h-8 rounded-DEFAULT bg-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="hub">hub</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-on-primary">ResolveAI</h1>
+<p class="font-label-sm text-label-sm text-on-primary-container">Enterprise Hub</p>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto space-y-xs">
+<a class="flex items-center gap-md px-sm py-sm rounded-DEFAULT text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Overview
+            </a>
+<a class="flex items-center gap-md px-sm py-sm rounded-DEFAULT text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+                Conversations
+            </a>
+<a class="flex items-center gap-md px-sm py-sm rounded-DEFAULT text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="inbox">inbox</span>
+                Support Inbox
+            </a>
+<a class="flex items-center gap-md px-sm py-sm rounded-DEFAULT text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+                Knowledge
+            </a>
+<a class="flex items-center gap-md px-sm py-sm rounded-DEFAULT text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="play_arrow">play_arrow</span>
+                Agent Runs
+            </a>
+<a class="flex items-center gap-md px-sm py-sm rounded-DEFAULT text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="fact_check">fact_check</span>
+                Approvals
+            </a>
+<a class="flex items-center gap-md px-sm py-sm rounded-DEFAULT text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+                Evaluations
+            </a>
+<a class="flex items-center gap-md px-sm py-sm rounded-DEFAULT text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="settings_suggest">settings_suggest</span>
+                Operations
+            </a>
+<a class="flex items-center gap-md px-sm py-sm rounded-DEFAULT text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+                Audit Log
+            </a>
+<a class="flex items-center gap-md px-sm py-sm rounded-DEFAULT text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="extension">extension</span>
+                Integrations
+            </a>
+<a class="flex items-center gap-md px-sm py-sm rounded-DEFAULT text-on-primary-container hover:bg-primary-container transition-colors font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+                Team
+            </a>
+<a class="flex items-center gap-md px-sm py-sm rounded-DEFAULT bg-secondary-container text-on-secondary-container font-medium font-body-sm text-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Settings
+            </a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 ml-64 flex flex-col min-h-screen h-screen overflow-hidden bg-background">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface h-16 fixed top-0 right-0 w-[calc(100%-16rem)] border-b border-outline-variant flex justify-between items-center px-gutter h-16 ml-64 z-10 transition-colors duration-150">
+<div class="flex-1 flex items-center">
+<!-- Search could go here -->
+</div>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:bg-surface-container-low p-sm rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-low p-sm rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant overflow-hidden ml-sm cursor-pointer">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a person looking confidently at the camera, wearing modern business casual attire. The background is a blurred office environment with cool, natural lighting. The mood is approachable and professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBH17Gjzu5Hz0w6pi7UYEv0UWvGToJMxSCtYh8nM_5HrAigdpRYSrOTAwSJOpdvrlfN7ugMPnFnUq9hhI3NZ3MpodV8JdOWkevJ1PogZM3g_a_1ZuktpiVKSwHGP_p2FroZEwZP4qeCobRv1l7A_m6xCYzSBmMdGnQF21-JOP6jJHR2oS0m15A1JCCfSE2YYYQXHG494xmMPOYv0wpuDTykYmbrJY8zrc0i__TxiCMf8cwFAhwWy3PCqg"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<main class="flex-1 mt-16 flex overflow-hidden">
+<!-- Settings Internal Sidebar -->
+<aside class="w-64 border-r border-outline-variant bg-surface-bright flex flex-col overflow-y-auto">
+<div class="p-lg">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-lg">Settings</h2>
+<nav class="space-y-xs">
+<a class="block px-md py-sm rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-low transition-colors font-body-sm text-body-sm" href="#">Profile</a>
+<a class="block px-md py-sm rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-low transition-colors font-body-sm text-body-sm" href="#">Organization</a>
+<a class="block px-md py-sm rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-low transition-colors font-body-sm text-body-sm" href="#">Billing</a>
+<a class="block px-md py-sm rounded-DEFAULT bg-surface-container-highest text-on-surface font-medium font-body-sm text-body-sm border-l-2 border-primary" href="#">Security</a>
+<a class="block px-md py-sm rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-low transition-colors font-body-sm text-body-sm" href="#">API Keys</a>
+<a class="block px-md py-sm rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-low transition-colors font-body-sm text-body-sm" href="#">Webhooks</a>
+</nav>
+</div>
+</aside>
+<!-- Security Settings Canvas -->
+<div class="flex-1 overflow-y-auto bg-canvas p-lg space-y-lg">
+<div class="max-w-4xl">
+<header class="mb-xl">
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Security</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Manage your password, 2FA, and active sessions.</p>
+</header>
+<!-- Password Section -->
+<section class="bg-surface border border-outline-variant rounded-lg p-lg mb-lg">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-md">Change Password</h3>
+<form class="space-y-md max-w-md">
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-xs">Current Password</label>
+<input class="w-full h-10 px-sm border border-outline-variant rounded-DEFAULT font-body-md text-body-md bg-surface text-on-surface focus:border-secondary-container focus:ring-2 focus:ring-secondary-container/10 outline-none transition-all" placeholder="Enter current password" type="password"/>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-xs">New Password</label>
+<input class="w-full h-10 px-sm border border-outline-variant rounded-DEFAULT font-body-md text-body-md bg-surface text-on-surface focus:border-secondary-container focus:ring-2 focus:ring-secondary-container/10 outline-none transition-all" placeholder="Enter new password" type="password"/>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-xs">Confirm New Password</label>
+<input class="w-full h-10 px-sm border border-outline-variant rounded-DEFAULT font-body-md text-body-md bg-surface text-on-surface focus:border-secondary-container focus:ring-2 focus:ring-secondary-container/10 outline-none transition-all" placeholder="Confirm new password" type="password"/>
+</div>
+<div class="pt-sm">
+<button class="bg-secondary-container text-on-secondary-container px-md py-xs rounded-DEFAULT font-label-md text-label-md hover:bg-secondary transition-colors" type="button">Update Password</button>
+</div>
+</form>
+</section>
+<!-- 2FA Section -->
+<section class="bg-surface border border-outline-variant rounded-lg p-lg mb-lg">
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-xs">Two-Factor Authentication (2FA)</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-md max-w-xl">Add an extra layer of security to your account by requiring more than just a password to sign in.</p>
+<div class="flex items-center gap-sm mt-sm">
+<span class="w-2 h-2 rounded-full bg-[#B45309]"></span>
+<span class="font-label-sm text-label-sm text-on-surface">Currently Disabled</span>
+</div>
+</div>
+<button class="bg-surface border border-outline-variant text-on-surface px-md py-xs rounded-DEFAULT font-label-md text-label-md hover:bg-surface-container-low transition-colors" type="button">Enable 2FA</button>
+</div>
+</section>
+<!-- Active Sessions Section -->
+<section class="bg-surface border border-outline-variant rounded-lg overflow-hidden mb-xl">
+<div class="p-md border-b border-outline-variant bg-surface-bright flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-on-surface">Active Sessions</h3>
+<button class="text-error font-label-md text-label-md hover:underline" type="button">Revoke All Other Sessions</button>
+</div>
+<div class="divide-y divide-outline-variant">
+<!-- Session 1 (Current) -->
+<div class="p-md flex items-center justify-between hover:bg-surface-container-low transition-colors">
+<div class="flex items-start gap-md">
+<div class="mt-xs text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="computer">computer</span>
+</div>
+<div>
+<div class="flex items-center gap-sm">
+<p class="font-label-md text-label-md text-on-surface">Mac OS • Chrome</p>
+<span class="bg-[#15803D]/10 text-[#15803D] px-xs py-xs rounded-DEFAULT font-label-sm text-label-sm uppercase tracking-wider text-[10px]">Current Session</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">San Francisco, CA, United States • 192.168.1.1</p>
+<p class="font-body-sm text-body-sm text-outline mt-xs">Active now</p>
+</div>
+</div>
+</div>
+<!-- Session 2 -->
+<div class="p-md flex items-center justify-between hover:bg-surface-container-low transition-colors">
+<div class="flex items-start gap-md">
+<div class="mt-xs text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="smartphone">smartphone</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">iOS • Safari</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">San Jose, CA, United States • 10.0.0.45</p>
+<p class="font-body-sm text-body-sm text-outline mt-xs">Last active: 2 hours ago</p>
+</div>
+</div>
+<div>
+<button class="p-sm text-on-surface-variant hover:text-error transition-colors rounded-full hover:bg-error-container/20">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<!-- Session 3 -->
+<div class="p-md flex items-center justify-between hover:bg-surface-container-low transition-colors">
+<div class="flex items-start gap-md">
+<div class="mt-xs text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="computer">computer</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Windows • Edge</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">New York, NY, United States • 172.16.254.1</p>
+<p class="font-body-sm text-body-sm text-outline mt-xs">Last active: Yesterday</p>
+</div>
+</div>
+<div>
+<button class="p-sm text-on-surface-variant hover:text-error transition-colors rounded-full hover:bg-error-container/20">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+</div>
+</body></html>

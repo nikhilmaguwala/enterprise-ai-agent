@@ -1,5 +1,5 @@
 import { apiFetch, apiUpload } from "@/lib/api";
-import { getStoredUser, setAccessToken, setStarterOrderNumber, setStoredUser } from "@/lib/auth";
+import { getAccessToken, getStoredUser, setAccessToken, setStarterOrderNumber, setStoredUser } from "@/lib/auth";
 import { env } from "@/lib/env";
 import {
   AgentRunSchema,
@@ -88,13 +88,44 @@ export async function loginAccount(input: { email: string; password: string }) {
   });
 }
 
-export async function fetchCurrentUser() {
-  const response = await apiFetch("/api/auth/me", { schema: MeResponseSchema });
-  if (response.starter_order_number) {
-    setStarterOrderNumber(response.starter_order_number);
+export async function fetchCurrentUser(): Promise<MeResponse> {
+  const token = getAccessToken();
+  if (!token) {
+    throw new Error("Not authenticated");
   }
-  setStoredUser(response.user);
-  return response;
+
+  const response = await fetch("/api/auth/me", {
+    headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+
+  const text = await response.text();
+  let parsed: unknown = null;
+  if (text) {
+    try {
+      parsed = JSON.parse(text) as unknown;
+    } catch {
+      parsed = { detail: text };
+    }
+  }
+
+  if (!response.ok) {
+    const detail =
+      typeof parsed === "object" &&
+      parsed &&
+      "detail" in parsed &&
+      typeof (parsed as { detail: unknown }).detail === "string"
+        ? (parsed as { detail: string }).detail
+        : `Failed to load account (${response.status})`;
+    throw new Error(detail);
+  }
+
+  const data = MeResponseSchema.parse(parsed);
+  if (data.starter_order_number) {
+    setStarterOrderNumber(data.starter_order_number);
+  }
+  setStoredUser(data.user);
+  return data;
 }
 
 export async function devLogin(email: string) {

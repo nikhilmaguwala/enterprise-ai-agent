@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { env } from "@/lib/env";
-import { DevLoginResponseSchema } from "@/lib/schemas";
+import { MeResponseSchema } from "@/lib/schemas";
 
 export async function GET(request: Request) {
   const authorization = request.headers.get("authorization");
@@ -20,15 +20,8 @@ export async function GET(request: Request) {
         status: upstream.status,
       });
     }
-    const data = DevLoginResponseSchema.parse({
-      access_token: "unused",
-      token_type: "bearer",
-      ...(parsed as Record<string, unknown>),
-    });
-    return NextResponse.json({
-      user: data.user,
-      starter_order_number: data.starter_order_number,
-    });
+    const data = MeResponseSchema.parse(parsed);
+    return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json(
       {

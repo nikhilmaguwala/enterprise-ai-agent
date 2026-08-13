@@ -82,31 +82,31 @@ One-page view of the system:
 
 ```mermaid
 flowchart TB
-  Users(["👤 Customer · Agent · Admin"])
+  Users([Users Customer Agent Admin])
 
-  subgraph Frontend["Frontend — Vercel"]
-    UI["ResolveAI Console<br/>Next.js · SSE · Approvals"]
+  subgraph frontend [Frontend Vercel]
+    UI[ResolveAI Console Next.js SSE]
   end
 
-  subgraph Backend["Backend — FastAPI Cloud"]
-    API["REST + SSE API"]
-    Agent["LangGraph Agent"]
-    Policy["Policy Engine"]
+  subgraph backend [Backend FastAPI Cloud]
+    API[REST and SSE API]
+    Agent[LangGraph Agent]
+    Policy[Policy Engine]
   end
 
-  subgraph Data["Data & AI"]
-    PG[("Postgres<br/>Neon")]
-    QD[("Qdrant<br/>RAG")]
-    LLM["Groq / Gemini"]
+  subgraph data [Data and AI]
+    PG[(Postgres Neon)]
+    QD[(Qdrant RAG)]
+    LLM[Groq Gemini]
   end
 
-  subgraph External["Integrations"]
-    Tools["CRM · ERP · Carrier · Tickets"]
-    Mail["Brevo Email"]
+  subgraph external [Integrations]
+    Tools[CRM ERP Carrier Tickets]
+    Mail[Brevo Email]
   end
 
   Users --> UI
-  UI -->|" /api/v1 proxy "| API
+  UI -->|api proxy| API
   API --> Agent
   Agent --> Policy
   Agent --> LLM
@@ -114,7 +114,7 @@ flowchart TB
   API --> PG
   API --> QD
   API --> Mail
-  UI -.->|" live events "| API
+  UI -.->|SSE| API
 ```
 
 ---
@@ -177,7 +177,7 @@ flowchart TD
   B -->|yes| C[Classify intent]
   C --> D[Load customer]
   D --> E[Load order]
-  E --> F[Retrieve policy · RAG]
+  E --> F[Retrieve policy RAG]
   F --> G[Check delivery]
   G --> H[Grounded explanation]
   H --> I[Validate action]
@@ -185,7 +185,7 @@ flowchart TD
   I -->|unsafe| K[Escalate]
   I -->|info| Z
   J --> L{Approved?}
-  L -->|yes| M[Execute · idempotent]
+  L -->|yes| M[Execute idempotent]
   M --> N[Verify]
   N --> Z
   K --> Z
@@ -244,11 +244,15 @@ flowchart LR
 <br />
 
 ```mermaid
-flowchart LR
-  JWT[JWT membership] --> A[Tenant A data]
-  JWT --> B[Tenant B data]
-  A x--x B
+flowchart TB
+  JWT[JWT org_id from membership]
+  TA[Tenant A Postgres and Qdrant scope]
+  TB[Tenant B Postgres and Qdrant scope]
+  JWT --> TA
+  JWT --> TB
 ```
+
+Tenant A **cannot** read Tenant B — enforced in API queries, RAG filters, and CI isolation tests.
 
 | Role | Chat | Inbox | Knowledge | Evals | Ops | Invite |
 | --- | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -269,8 +273,8 @@ flowchart TB
   R[enterprise-ai-agent]
   R --> API[apps/api]
   R --> WEB[apps/web]
-  R --> PKG[packages/*]
-  R --> EV[evals/]
+  R --> PKG[packages]
+  R --> EV[evals]
   PKG --> DOM[domain]
   PKG --> AGT[agent]
   PKG --> KNO[knowledge]
@@ -286,8 +290,8 @@ flowchart TB
 
 ```mermaid
 flowchart LR
-  PR[Pull request] --> CI[Lint · test · gitleaks]
-  Main[Push main] --> T[Full suite · evals]
+  PR[Pull request] --> CI[Lint test gitleaks]
+  Main[Push main] --> T[Full suite evals]
   T --> D[Deploy]
   D --> V[Vercel]
   D --> F[FastAPI Cloud]
@@ -301,10 +305,9 @@ flowchart LR
 <br />
 
 ```mermaid
-pie showData
-  title Case categories
+pie title Eval case categories
   "Policy" : 20
-  "Order / shipment" : 15
+  "Order shipment" : 15
   "Address change" : 10
   "Prompt injection" : 5
   "Missing evidence" : 5

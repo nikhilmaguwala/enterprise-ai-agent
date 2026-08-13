@@ -26,6 +26,7 @@ import {
   type KnowledgeDocument,
   type Message,
   type MessageList,
+  type MeResponse,
   type OperationsDashboard,
 } from "@/lib/schemas";
 

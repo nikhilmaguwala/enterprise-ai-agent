@@ -128,6 +128,54 @@ async def login(
     return _auth_response(user=user, org=org, membership=membership, settings=settings)
 
 
+@router.get("/me")
+async def current_user(
+    ctx: ExecutionContext = Depends(get_execution_context),
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    user = await db.get(m.User, ctx.actor_id)
+    org = await db.get(m.Organization, ctx.organization_id)
+    if user is None or org is None:
+        raise HTTPException(status_code=404, detail="user not found")
+
+    membership = (
+        await db.execute(
+            select(m.Membership).where(
+                m.Membership.user_id == user.id,
+                m.Membership.organization_id == org.id,
+                m.Membership.status == "active",
+            )
+        )
+    ).scalar_one_or_none()
+    if membership is None:
+        raise HTTPException(status_code=403, detail="no active membership")
+
+    order = (
+        await db.execute(
+            select(m.Order)
+            .where(m.Order.organization_id == org.id)
+            .order_by(m.Order.created_at.desc())
+            .limit(1)
+        )
+    ).scalar_one_or_none()
+
+    db_role = membership.role
+    frontend_role = _ROLE_TO_FRONTEND.get(db_role, db_role)
+    payload: dict = {
+        "user": {
+            "id": str(user.id),
+            "email": user.email,
+            "name": user.display_name,
+            "role": frontend_role,
+            "organization_id": str(org.id),
+            "organization_name": org.name,
+        },
+    }
+    if order is not None:
+        payload["starter_order_number"] = order.order_number
+    return payload
+
+
 @router.post("/invite")
 async def invite_user(
     body: InviteRequest,

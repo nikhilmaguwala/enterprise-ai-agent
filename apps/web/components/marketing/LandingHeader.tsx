@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { DevUserSwitcher } from "@/components/auth/DevUserSwitcher";
 import { Button } from "@/components/ui/Button";
-import { isDevAuthEnabled, isRegistrationEnabled } from "@/lib/client";
+import { isDemoMode, isRegistrationEnabled } from "@/lib/client";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/cn";
 
@@ -87,7 +87,7 @@ export function LandingHeader() {
               </Button>
             </Link>
           )}
-          {isDevAuthEnabled() ? <DevUserSwitcher variant="landing" /> : null}
+          {isDemoMode() ? <DevUserSwitcher variant="landing" /> : null}
         </div>
       </div>
     </header>

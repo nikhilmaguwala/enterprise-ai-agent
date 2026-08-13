@@ -2,6 +2,7 @@ import type { Role, User } from "@/lib/schemas";
 
 const TOKEN_KEY = "ea_access_token";
 const USER_KEY = "ea_user";
+const STARTER_ORDER_KEY = "ea_starter_order";
 const AUTH_EVENT = "ea-auth-changed";
 
 function canUseStorage(): boolean {
@@ -43,6 +44,22 @@ export function clearAccessToken(): void {
   if (!canUseStorage()) return;
   window.localStorage.removeItem(TOKEN_KEY);
   window.localStorage.removeItem(USER_KEY);
+  window.localStorage.removeItem(STARTER_ORDER_KEY);
+  notifyAuthChanged();
+}
+
+export function getStarterOrderNumber(): string | null {
+  if (!canUseStorage()) return null;
+  return window.localStorage.getItem(STARTER_ORDER_KEY);
+}
+
+export function setStarterOrderNumber(orderNumber: string | null): void {
+  if (!canUseStorage()) return;
+  if (orderNumber) {
+    window.localStorage.setItem(STARTER_ORDER_KEY, orderNumber);
+  } else {
+    window.localStorage.removeItem(STARTER_ORDER_KEY);
+  }
   notifyAuthChanged();
 }
 

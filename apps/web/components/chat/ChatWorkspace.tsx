@@ -15,10 +15,13 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { ErrorBanner } from "@/components/ui/ErrorBanner";
 import { Button } from "@/components/ui/Button";
 import { StatusBadge, toneForStatus } from "@/components/ui/StatusBadge";
+import { getStarterOrderNumber } from "@/lib/auth";
 import {
   conversationEventsPath,
   createConversation,
   decideApproval,
+  fetchCurrentUser,
+  isDemoMode,
   listConversations,
   listMessages,
   sendMessage,
@@ -31,7 +34,7 @@ import { cn } from "@/lib/cn";
 
 export function ChatWorkspace() {
   const queryClient = useQueryClient();
-  const { token, ready } = useAuth();
+  const { token, ready, user } = useAuth();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
   const [liveTools, setLiveTools] = useState<ToolProgress[]>([]);
@@ -39,6 +42,30 @@ export function ChatWorkspace() {
   const [filter, setFilter] = useState<"active" | "waiting" | "resolved">(
     "active",
   );
+
+  const [starterOrder, setStarterOrder] = useState<string | null>(null);
+
+  const exampleOrder = useMemo(() => {
+    if (starterOrder) return starterOrder;
+    if (user?.email.endsWith("@acme-demo.test")) return "ACM-10001";
+    return "your order";
+  }, [starterOrder, user?.email]);
+
+  useEffect(() => {
+    setStarterOrder(getStarterOrderNumber());
+  }, [user?.email]);
+
+  useEffect(() => {
+    if (!ready || !token || isDemoMode()) return;
+    if (getStarterOrderNumber()) return;
+    void fetchCurrentUser()
+      .then((data) => {
+        if (data.starter_order_number) {
+          setStarterOrder(data.starter_order_number);
+        }
+      })
+      .catch(() => undefined);
+  }, [ready, token]);
 
   const conversationsQuery = useQuery({
     queryKey: ["conversations"],
@@ -348,7 +375,7 @@ export function ChatWorkspace() {
                   rows={2}
                   value={draft}
                   onChange={(e) => setDraft(e.target.value)}
-                  placeholder="Ask why order DEMO-1042 is delayed, or request an address change…"
+                  placeholder={`Ask why order ${exampleOrder} is delayed, or request an address change…`}
                   className="min-h-[80px] w-full resize-none border-none bg-transparent p-4 text-sm outline-none"
                 />
                 <div className="flex items-center justify-between border-t border-border-base p-2">
@@ -363,7 +390,7 @@ export function ChatWorkspace() {
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-xs tabular-nums text-outline">
-                      Quota: demo
+                      {isDemoMode() ? "Quota: demo" : "Quota: live"}
                     </span>
                     <Button
                       type="submit"
@@ -394,10 +421,14 @@ export function ChatWorkspace() {
             title="Order Summary"
           >
             <p className="text-sm font-semibold text-on-surface">
-              Demo order context
+              {exampleOrder === "your order"
+                ? "Your workspace order"
+                : `Order ${exampleOrder}`}
             </p>
             <p className="mt-1 text-sm text-on-surface-variant">
-              Order details appear when the agent loads CRM/ERP tools.
+              {exampleOrder === "your order"
+                ? "Start a conversation and mention your order number from signup."
+                : "Delayed shipment with hub backlog — ask the agent for status or an address change."}
             </p>
           </ContextPanel>
           <ContextPanel icon={<Truck className="size-4" />} title="Shipment">

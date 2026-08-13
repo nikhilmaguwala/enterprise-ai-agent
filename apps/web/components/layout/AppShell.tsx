@@ -14,7 +14,7 @@ import {
 import { DevUserSwitcher } from "@/components/auth/DevUserSwitcher";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { canAccessPath } from "@/lib/auth";
-import { isDevAuthEnabled } from "@/lib/client";
+import { isDemoMode } from "@/lib/client";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/cn";
 import { MAIN_NAV } from "@/lib/navigation";
@@ -197,10 +197,22 @@ export function AppShell({
                   {user?.organization_name ?? "Demo Tenant"}
                   <ChevronDown className="size-3.5" />
                 </button>
-                <div className="flex items-center gap-1.5 rounded-md bg-surface-container-highest px-2 py-1">
-                  <span className="size-2 rounded-full bg-success" />
+                <div
+                  className={cn(
+                    "flex items-center gap-1.5 rounded-md px-2 py-1",
+                    isDemoMode()
+                      ? "bg-surface-container-highest"
+                      : "bg-secondary-container",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "size-2 rounded-full",
+                      isDemoMode() ? "bg-warning" : "bg-success",
+                    )}
+                  />
                   <span className="text-xs font-semibold uppercase tracking-wide">
-                    Demo
+                    {isDemoMode() ? "Demo" : "Live"}
                   </span>
                 </div>
               </div>
@@ -215,7 +227,7 @@ export function AppShell({
                   </p>
                 </div>
               ) : null}
-              {isDevAuthEnabled() ? <DevUserSwitcher /> : null}
+              {isDemoMode() ? <DevUserSwitcher /> : null}
 
               <div className="hidden flex-col items-end lg:flex">
                 <div className="mb-1 flex items-center gap-2">

@@ -27,6 +27,12 @@ export const DevLoginResponseSchema = z.object({
 });
 export type DevLoginResponse = z.infer<typeof DevLoginResponseSchema>;
 
+export const MeResponseSchema = z.object({
+  user: UserSchema,
+  starter_order_number: z.string().optional(),
+});
+export type MeResponse = z.infer<typeof MeResponseSchema>;
+
 export const CitationSchema = z.object({
   id: z.string(),
   title: z.string(),

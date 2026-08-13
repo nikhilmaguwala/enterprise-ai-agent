@@ -1,11 +1,12 @@
 import { apiFetch, apiUpload } from "@/lib/api";
-import { setAccessToken, setStoredUser } from "@/lib/auth";
+import { getStoredUser, setAccessToken, setStarterOrderNumber, setStoredUser } from "@/lib/auth";
 import { env } from "@/lib/env";
 import {
   AgentRunSchema,
   ConversationListSchema,
   ConversationSchema,
   DevLoginResponseSchema,
+  MeResponseSchema,
   EscalationListSchema,
   EvaluationsDashboardSchema,
   KnowledgeDocumentListSchema,
@@ -59,6 +60,9 @@ async function exchangeAuth(path: string, body: Record<string, string>) {
   const data = DevLoginResponseSchema.parse(parsed);
   setAccessToken(data.access_token);
   setStoredUser(data.user);
+  if (data.starter_order_number) {
+    setStarterOrderNumber(data.starter_order_number);
+  }
   return data;
 }
 
@@ -81,6 +85,15 @@ export async function loginAccount(input: { email: string; password: string }) {
     email: input.email,
     password: input.password,
   });
+}
+
+export async function fetchCurrentUser() {
+  const response = await apiFetch("/api/auth/me", { schema: MeResponseSchema });
+  if (response.starter_order_number) {
+    setStarterOrderNumber(response.starter_order_number);
+  }
+  setStoredUser(response.user);
+  return response;
 }
 
 export async function devLogin(email: string) {
@@ -192,4 +205,16 @@ export function isDevAuthEnabled(): boolean {
 
 export function isRegistrationEnabled(): boolean {
   return env.registrationEnabled;
+}
+
+/** True for seeded demo accounts — real signup users never see demo chrome. */
+export function isDemoMode(): boolean {
+  if (!env.devAuthEnabled) return false;
+  if (!env.registrationEnabled) return true;
+  const user = getStoredUser();
+  if (!user) return false;
+  return (
+    user.email.endsWith("@acme-demo.test") ||
+    user.email.endsWith("@globex-demo.test")
+  );
 }

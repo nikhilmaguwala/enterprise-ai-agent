@@ -22,8 +22,10 @@ async def client(tmp_path, monkeypatch):
     monkeypatch.setenv("DEV_AUTH_ENABLED", "true")
     monkeypatch.setenv("DEV_AUTH_SECRET", "test-secret-for-unit-tests-only")
     monkeypatch.setenv("INTERNAL_JOB_HMAC_KEY", "test-hmac-key-32-bytes-minimum!")
+    db_file = (tmp_path / "test.db").resolve()
     monkeypatch.setenv(
-        "DATABASE_URL", f"sqlite+aiosqlite:///{tmp_path / 'test.db'}"
+        "DATABASE_URL",
+        f"sqlite+aiosqlite:///{db_file.as_posix()}",
     )
 
     # Rebuild settings cache and engine for sqlite

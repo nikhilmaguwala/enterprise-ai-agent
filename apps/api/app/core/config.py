@@ -113,6 +113,8 @@ class Settings(BaseSettings):
     @field_validator("database_url")
     @classmethod
     def normalize_database_url(cls, value: str) -> str:
+        if value.startswith("sqlite"):
+            return value
         if value.startswith("postgresql://"):
             value = value.replace("postgresql://", "postgresql+asyncpg://", 1)
         elif value.startswith("postgres://"):

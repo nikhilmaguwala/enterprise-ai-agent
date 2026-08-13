@@ -119,7 +119,10 @@ async def register_workspace(
         ],
     )
 
-    db.add_all([org, user, membership, customer, order, shipment])
+    db.add(org)
+    db.add(user)
+    await db.flush()
+    db.add_all([membership, customer, order, shipment])
     await db.flush()
     return user, org, membership, order
 

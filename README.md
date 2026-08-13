@@ -1,217 +1,253 @@
-# ResolveAI — Enterprise AI Support Agent
+<div align="center">
 
-**Portfolio project · Full-stack multi-tenant AI support platform**
+# ResolveAI
 
-A production-deployed B2B support agent for e-commerce operations. It grounds answers in tenant policy (RAG), calls enterprise systems through typed tools, requires human approval before mutations, executes writes idempotently, and records a full audit trail.
+### Enterprise AI Support Agent
 
-> **For reviewers:** Start with [System overview](#system-overview) and [LangGraph agent workflow](#langgraph-agent-workflow), then [Project scope](#project-scope).
+**Multi-tenant B2B support platform · LangGraph · RAG · human-in-the-loop approvals**
 
----
+<br />
 
-## At a glance
+[![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![LangGraph](https://img.shields.io/badge/LangGraph-Agent-1F2937?style=for-the-badge)](https://langchain-ai.github.io/langgraph/)
+[![CI](https://img.shields.io/badge/CI-GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](.github/workflows/main.yml)
 
-```mermaid
-flowchart LR
-  subgraph Problem
-    P1[Order delay questions]
-    P2[Address change requests]
-    P3[Policy must be cited]
-    P4[Mutations must be safe]
-  end
+<br />
 
-  subgraph Solution
-    S1[Multi-tenant API]
-    S2[LangGraph agent]
-    S3[RAG + tools]
-    S4[HITL approvals]
-  end
+| **24** tests | **60** eval cases | **13** graph nodes | **12** UI routes | **11** ADRs |
+| :---: | :---: | :---: | :---: | :---: |
+| pytest + isolation | deterministic graders | LangGraph workflow | ResolveAI console | documented decisions |
 
-  subgraph Proof
-    T1[24 pytest tests]
-    T2[60 eval cases]
-    T3[CI + deploy]
-  end
+<br />
 
-  Problem --> Solution --> Proof
-```
+[Overview](#overview) ·
+[Architecture](#architecture) ·
+[Features](#features) ·
+[Diagrams](#diagrams) ·
+[Stack](#stack) ·
+[Run locally](#run-locally) ·
+[Author](#author)
 
-| | |
-| --- | --- |
-| **Problem** | Explain order issues with evidence; change addresses safely — no hallucinated policy, no double mutations. |
-| **Approach** | FastAPI monolith + LangGraph + Next.js console, multi-tenant from day one. |
-| **Domain** | Fictional e-commerce (delays, address changes, escalations). |
-| **Hosting** | Vercel · FastAPI Cloud · Neon · Qdrant · Groq |
-| **Docs** | Architecture · 11 ADRs · threat model · runbooks |
+</div>
 
 ---
 
-## System overview
+## Overview
+
+**Portfolio project by [Nikhil Maguwala](#author)** — a full-stack enterprise AI application, not a chatbot wrapper.
+
+I designed and built a production-deployed support agent that:
+
+- **Grounds** answers in tenant policy (RAG + citations)
+- **Calls** CRM, ERP, carrier, and ticketing tools
+- **Pauses** for human approval before any mutation
+- **Executes** idempotent writes with audit trail
+- **Isolates** every tenant in Postgres and Qdrant
+
+**Domain:** fictional e-commerce — order delays, address changes, escalations.
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+**Built**
+
+- Multi-tenant backend + JWT auth
+- Signup, login, team invites
+- LangGraph agent (13 nodes)
+- ResolveAI Next.js console
+- CI/CD → Vercel + FastAPI Cloud
+
+</td>
+<td width="50%" valign="top">
+
+**Not claimed**
+
+- Stripe / billing
+- Enterprise SSO in prod
+- Live Salesforce / SAP
+- SOC2 certification
+
+</td>
+</tr>
+</table>
+
+---
+
+## Architecture
+
+One-page view of the system:
 
 ```mermaid
 flowchart TB
-  User([Customer / Agent / Admin])
-  Web[Next.js on Vercel]
-  Proxy["/api/v1 proxy"]
-  API[FastAPI Cloud API]
-  PG[(Neon Postgres)]
-  QD[(Qdrant Cloud)]
-  LLM[Groq / Gemini]
-  Store[(Object storage)]
-  Email[Brevo]
-  Mocks[CRM · ERP · Carrier · Ticketing]
+  Users(["👤 Customer · Agent · Admin"])
 
-  User --> Web
-  Web --> Proxy --> API
+  subgraph Frontend["Frontend — Vercel"]
+    UI["ResolveAI Console<br/>Next.js · SSE · Approvals"]
+  end
+
+  subgraph Backend["Backend — FastAPI Cloud"]
+    API["REST + SSE API"]
+    Agent["LangGraph Agent"]
+    Policy["Policy Engine"]
+  end
+
+  subgraph Data["Data & AI"]
+    PG[("Postgres<br/>Neon")]
+    QD[("Qdrant<br/>RAG")]
+    LLM["Groq / Gemini"]
+  end
+
+  subgraph External["Integrations"]
+    Tools["CRM · ERP · Carrier · Tickets"]
+    Mail["Brevo Email"]
+  end
+
+  Users --> UI
+  UI -->|" /api/v1 proxy "| API
+  API --> Agent
+  Agent --> Policy
+  Agent --> LLM
+  Agent --> Tools
   API --> PG
   API --> QD
-  API --> LLM
-  API --> Store
-  API --> Email
-  API --> Mocks
-  Web -. SSE events .-> API
+  API --> Mail
+  UI -.->|" live events "| API
 ```
 
 ---
 
-## Monorepo map
+## Features
 
-```mermaid
-flowchart TB
-  Root[enterprise-ai-agent]
+<table>
+<tr>
+<th>Area</th>
+<th>What it does</th>
+</tr>
+<tr>
+<td><b>Auth & tenancy</b></td>
+<td>Signup creates org + admin + starter order · team invites · RBAC · tenant isolation tests</td>
+</tr>
+<tr>
+<td><b>Chat</b></td>
+<td>Streaming SSE · tool progress · policy citations · approval cards in UI</td>
+</tr>
+<tr>
+<td><b>Agent</b></td>
+<td>13-node LangGraph · classify → RAG → tools → validate → approve → mutate → verify</td>
+</tr>
+<tr>
+<td><b>Knowledge</b></td>
+<td>PDF upload · chunk · embed · Qdrant search with mandatory <code>organization_id</code> filter</td>
+</tr>
+<tr>
+<td><b>Ops</b></td>
+<td>Job queue · dead-letter replay · audit log · quotas · eval dashboard</td>
+</tr>
+</table>
 
-  Root --> Apps
-  Root --> Packages
-  Root --> Services
-  Root --> Evals
+### UI routes
 
-  subgraph Apps
-    API[apps/api<br/>FastAPI · Alembic · tests]
-    WEB[apps/web<br/>Next.js ResolveAI UI]
-  end
-
-  subgraph Packages
-    DOM[domain<br/>policy engine]
-    AGT[agent<br/>LangGraph]
-    KNO[knowledge<br/>RAG]
-    INT[integrations<br/>tool clients]
-    OBS[observability]
-  end
-
-  subgraph Services
-    CRM[mock-crm]
-    ERP[mock-erp]
-    CAR[mock-carrier]
-    TKT[mock-ticketing]
-  end
-
-  Evals[evals/<br/>60 cases · graders]
-
-  API --> Packages
-  AGT --> INT
-  AGT --> KNO
-  AGT --> DOM
-```
+| Route | Who | Purpose |
+| --- | --- | --- |
+| `/signup` · `/login` | Public | Register workspace |
+| `/chat` | All | Conversations + approvals |
+| `/inbox` | Agent+ | Escalation queue |
+| `/knowledge` | Agent+ | Document upload |
+| `/team/invite` | Admin | Invite teammates |
+| `/operations` | Admin | Job health |
+| `/evaluations` | Supervisor+ | Eval runs |
+| `/runs/[id]` | All | Agent inspector |
 
 ---
 
-## LangGraph agent workflow
+## Diagrams
 
-13-node graph (`packages/agent`, `graph_version=v1`):
+<details open>
+<summary><b>Agent workflow — 13 LangGraph nodes</b></summary>
+
+<br />
 
 ```mermaid
 flowchart TD
-  A[authenticate_and_load_context] --> B{classified?}
-  B -->|no| Z[finalize_response]
-  B -->|yes| C[classify_intent]
-  C --> D[load_customer]
-  D --> E[load_order]
-  E --> F[retrieve_policy]
-  F --> G[check_delivery]
-  G --> H[compose_grounded_explanation]
-  H --> I[validate_proposed_action]
-  I -->|approve path| J[request_human_approval]
-  I -->|escalate| K[create_escalation]
-  I -->|info only| Z
-  J --> L{approved?}
-  L -->|pending| Z
-  L -->|yes| M[execute_approved_action]
-  M --> N[verify_action_result]
+  A[Authenticate] --> B{OK?}
+  B -->|no| Z[Finalize]
+  B -->|yes| C[Classify intent]
+  C --> D[Load customer]
+  D --> E[Load order]
+  E --> F[Retrieve policy · RAG]
+  F --> G[Check delivery]
+  G --> H[Grounded explanation]
+  H --> I[Validate action]
+  I -->|mutation| J[Request approval]
+  I -->|unsafe| K[Escalate]
+  I -->|info| Z
+  J --> L{Approved?}
+  L -->|yes| M[Execute · idempotent]
+  M --> N[Verify]
   N --> Z
   K --> Z
+  L -->|pending| Z
 ```
 
----
+</details>
 
-## Human-in-the-loop approval
+<details>
+<summary><b>Approval sequence — human-in-the-loop before ERP write</b></summary>
+
+<br />
 
 ```mermaid
 sequenceDiagram
-  autonumber
   actor User
-  participant UI as Next.js /chat
+  participant UI as Chat UI
   participant API as FastAPI
   participant Graph as LangGraph
-  participant ERP as Mock ERP
+  participant ERP as ERP tool
 
-  User->>UI: Ask to change shipping address
-  UI->>API: POST /conversations/{id}/messages
-  API->>Graph: Run turn
+  User->>UI: Request address change
+  UI->>API: POST message
+  API->>Graph: Run graph
   Graph->>ERP: GET order
-  Graph->>API: Persist approval (paused)
+  Graph-->>API: Pause + approval record
   API-->>UI: SSE approval_required
-  UI-->>User: Approval card
   User->>UI: Approve
-  UI->>API: POST /approvals/{id}/approve
-  API->>Graph: Resume + revalidate
-  Graph->>ERP: POST address change (Idempotency-Key)
-  Graph->>ERP: GET order verify
-  Graph->>API: Final assistant message + audit
-  API-->>UI: SSE message_completed
+  UI->>API: POST approve
+  Graph->>ERP: POST mutate + verify
+  API-->>UI: SSE completed
 ```
 
----
+</details>
 
-## RAG ingestion pipeline
+<details>
+<summary><b>RAG pipeline — upload to citation</b></summary>
+
+<br />
 
 ```mermaid
 flowchart LR
-  U[Upload PDF] --> P[Presign + validate MIME]
-  P --> J[Enqueue extract job]
-  J --> X[Extract text]
-  X --> C[Chunk sections]
-  C --> E[Embed vectors]
-  E --> Q[Upsert Qdrant<br/>organization_id filter]
-  Q --> R[Retrieve at query time]
-  R --> M[Citations in chat]
+  A[Upload] --> B[Validate]
+  B --> C[Extract]
+  C --> D[Chunk]
+  D --> E[Embed]
+  E --> F[(Qdrant)]
+  F --> G[Cite in chat]
 ```
 
----
+</details>
 
-## Multi-tenancy & roles
+<details>
+<summary><b>Multi-tenancy — JWT org context, never trust client body</b></summary>
+
+<br />
 
 ```mermaid
-flowchart TB
-  subgraph Tenant A
-    OA[Organization A]
-    UA1[Admin]
-    UA2[Agent]
-    UA3[Customer]
-    DA[Data + RAG index A]
-  end
-
-  subgraph Tenant B
-    OB[Organization B]
-    UB1[Admin]
-    UB2[Customer]
-    DB[Data + RAG index B]
-  end
-
-  JWT[JWT carries org_id from membership]
-  JWT --> Tenant A
-  JWT --> Tenant B
-
-  UA3 -->|cannot read| DB
-  UB2 -->|cannot read| DA
+flowchart LR
+  JWT[JWT membership] --> A[Tenant A data]
+  JWT --> B[Tenant B data]
+  A x--x B
 ```
 
 | Role | Chat | Inbox | Knowledge | Evals | Ops | Invite |
@@ -221,90 +257,53 @@ flowchart TB
 | Supervisor | ✓ | ✓ | ✓ | ✓ | | |
 | Admin | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 
----
+</details>
 
-## User journeys
+<details>
+<summary><b>Monorepo structure</b></summary>
 
-### Real signup → first conversation
+<br />
 
 ```mermaid
-journey
-  title New workspace onboarding
-  section Signup
-    Visit /signup: 5: User
-    Create org + admin + order ORD-XXXXXX: 5: API
-  section Chat
-    Open /chat (Live mode): 5: User
-    Ask about order delay: 4: User
-    Agent cites policy + order status: 5: Agent
-  section Team
-    Admin invites agent at /team/invite: 5: Admin
-    Agent logs in via email: 5: Agent
+flowchart TB
+  R[enterprise-ai-agent]
+  R --> API[apps/api]
+  R --> WEB[apps/web]
+  R --> PKG[packages/*]
+  R --> EV[evals/]
+  PKG --> DOM[domain]
+  PKG --> AGT[agent]
+  PKG --> KNO[knowledge]
+  PKG --> INT[integrations]
 ```
 
-### Local demo (dev only)
+</details>
 
-| Role | Email | Org |
-| --- | --- | --- |
-| Customer | `customer@acme-demo.test` | Acme Retail |
-| Agent | `agent@acme-demo.test` | Acme Retail |
-| Admin | `admin@acme-demo.test` | Acme Retail |
+<details>
+<summary><b>CI/CD — test on PR, deploy on main</b></summary>
 
-Demo order: `ACM-10001` · set `DEV_AUTH_ENABLED=true`
-
----
-
-## Project scope
-
-I designed and built this end to end as a **portfolio-grade enterprise AI application**, not a thin chat wrapper.
-
-| Layer | What I shipped |
-| --- | --- |
-| **Backend** | Multi-tenant Postgres, JWT auth, signup/login/invites, quotas, idempotency, job queue, audit log |
-| **Agent** | LangGraph 13-node workflow, tool gateway, SSE streaming, Groq/Gemini providers |
-| **RAG** | Upload pipeline, Qdrant with tenant filters, inline citations |
-| **Frontend** | ResolveAI console — 12 routes, role nav, approval cards, run inspector |
-| **Quality** | 24 pytest tests, 60-case eval suite, gitleaks, CI on every PR |
-| **Ops** | GitHub Actions deploy to Vercel + FastAPI Cloud, Alembic migrations |
-| **Docs** | Architecture, ADRs, threat model, runbooks, deployment guide |
-
-### Frontend routes
-
-| Route | Access | Purpose |
-| --- | --- | --- |
-| `/signup`, `/login` | Public | Workspace registration |
-| `/chat` | All | Streaming chat + approvals |
-| `/inbox` | Agent+ | Escalations |
-| `/knowledge` | Agent+ | Document upload |
-| `/evaluations` | Supervisor+ | Eval dashboard |
-| `/operations` | Admin | Job queue health |
-| `/team/invite` | Admin | Team invites |
-| `/runs/[id]` | All | Agent run inspector |
-| `/architecture` | All | In-app diagram |
-
----
-
-## CI/CD pipeline
+<br />
 
 ```mermaid
 flowchart LR
-  PR[Pull request] --> CI[ci.yml<br/>lint · test · gitleaks]
-  Main[Push to main] --> Tests[main.yml<br/>full suite · eval smoke]
-  Tests --> Deploy[deploy.yml]
-  Deploy --> API[FastAPI Cloud]
-  Deploy --> Web[Vercel]
+  PR[Pull request] --> CI[Lint · test · gitleaks]
+  Main[Push main] --> T[Full suite · evals]
+  T --> D[Deploy]
+  D --> V[Vercel]
+  D --> F[FastAPI Cloud]
 ```
 
----
+</details>
 
-## Eval coverage
+<details>
+<summary><b>Eval dataset — 60 cases</b></summary>
 
-60 deterministic cases in `evals/datasets/cases.jsonl`:
+<br />
 
 ```mermaid
 pie showData
-  title Eval case categories (60 total)
-  "Policy / grounding" : 20
+  title Case categories
+  "Policy" : 20
   "Order / shipment" : 15
   "Address change" : 10
   "Prompt injection" : 5
@@ -312,187 +311,99 @@ pie showData
   "Dependency failure" : 5
 ```
 
-Categories include grounding checks, forbidden-tool guards, approval behavior, and injection resistance.
+</details>
 
----
+<details>
+<summary><b>Security model</b></summary>
 
-## SaaS maturity
-
-Architecturally **SaaS-grade** for portfolio / pilot — **not** a commercial SaaS business yet.
-
-```mermaid
-flowchart TB
-  subgraph Done["Implemented (core SaaS patterns)"]
-    D1[Multi-tenant model]
-    D2[Signup · login · invites]
-    D3[RBAC + tenant isolation tests]
-    D4[RAG + citations]
-    D5[HITL approvals]
-    D6[Idempotency + audit log]
-    D7[Job queue + CI/CD deploy]
-  end
-
-  subgraph Next["Not built yet (commercial SaaS)"]
-    N1[Stripe billing]
-    N2[Enterprise SSO in prod]
-    N3[Live CRM / ERP APIs]
-    N4[SOC2 / compliance pack]
-  end
-```
-
-| Capability | Status |
-| --- | --- |
-| Multi-tenant model, signup, invites, RBAC | **Done** |
-| RAG, HITL, idempotency, audit, quotas | **Done** |
-| Production deploy + CI/CD | **Done** |
-| Billing / Stripe | Not built |
-| Enterprise SSO in prod | Auth0 wired; JWT auth in prod |
-| Live CRM/ERP | Mock HTTP services |
-| SOC2 | Threat model + runbooks only |
-
----
-
-## Engineering highlights
-
-1. **Multi-tenancy** — org from JWT membership, not request body; isolation tests in CI  
-2. **Safe agent actions** — policy engine + approval gate before ERP mutations  
-3. **Production patterns** — idempotency, audit log, job queue, SSE, API proxy  
-4. **Monorepo packages** — domain, agent, knowledge, integrations, observability  
-5. **Eval-driven QA** — 60 labeled cases, deterministic graders  
-6. **Honest scope** — mocks documented; gaps listed above  
-
----
-
-## Tech stack
+<br />
 
 ```mermaid
-mindmap
-  root((ResolveAI))
-    Backend
-      FastAPI
-      SQLAlchemy 2
-      Alembic
-      Pydantic v2
-    Agent
-      LangGraph
-      Groq
-      Gemini
-    Frontend
-      Next.js 16
-      React 19
-      TanStack Query
-      Tailwind 4
-    Data
-      Neon Postgres
-      Qdrant
-      Redis optional
-    Ops
-      GitHub Actions
-      Vercel
-      FastAPI Cloud
+flowchart LR
+  T1[Tenant spoof] --> M1[JWT org scope]
+  T2[Injection] --> M2[RBAC outside LLM]
+  T3[Double write] --> M3[Idempotency keys]
+  T4[Secret leak] --> M4[gitleaks + gitignore]
+  T5[Cost abuse] --> M5[Daily quotas]
 ```
+
+→ [docs/threat-model.md](docs/threat-model.md)
+
+</details>
+
+More diagrams: [docs/architecture.md](docs/architecture.md)
 
 ---
 
-## API modules
+## Stack
 
-| Module | Endpoints |
-| --- | --- |
-| Auth | register · login · invite · me |
-| Conversations | threads · messages · SSE events |
-| Approvals | get · approve · reject |
-| Knowledge | presign · upload · ingest · list |
-| Inbox | escalations |
-| Operations | dashboard · job replay |
-| Evaluations | runs · dashboard |
-| Audit | append-only log |
-| Jobs | queue · HMAC drain |
+<div align="center">
 
-OpenAPI: `/docs` on running API.
+| Backend | Agent | Frontend | Data | Hosting |
+| :---: | :---: | :---: | :---: | :---: |
+| FastAPI | LangGraph | Next.js 16 | Neon Postgres | Vercel |
+| SQLAlchemy 2 | Groq | React 19 | Qdrant | FastAPI Cloud |
+| Alembic | Gemini | TanStack Query | Redis optional | GitHub Actions |
+| Pydantic v2 | Tool gateway | Tailwind 4 | R2 / Firebase | Brevo email |
+
+</div>
 
 ---
 
 ## Run locally
 
 ```bash
-cp .env.example .env
-make setup    # deps, migrate, seed
-make dev      # API + web + mocks
-make test     # 24 pytest tests
-make eval     # eval smoke
+git clone https://github.com/nikhilmaguwala/enterprise-ai-agent.git
+cd enterprise-ai-agent
+cp .env.example .env          # add Neon, Qdrant, Groq keys
+make setup && make dev
 ```
+
+| Command | Action |
+| --- | --- |
+| `make test` | 24 pytest tests |
+| `make eval` | 60-case eval smoke |
+| `make lint` | ruff + ESLint |
+
+**Demo login** (`DEV_AUTH_ENABLED=true`): `customer@acme-demo.test` · order `ACM-10001`
+
+**Real flow:** `/signup` → org + order `ORD-XXXXXX` → `/chat`
 
 ---
 
 ## Deploy
 
-Push to `main` → `.github/workflows/deploy.yml` → FastAPI Cloud + Vercel.
+Every push to `main` runs [deploy.yml](.github/workflows/deploy.yml) → **Vercel** + **FastAPI Cloud**.
 
-**Secrets:** `FASTAPI_CLOUD_TOKEN`, `FASTAPI_CLOUD_APP_ID`, `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`  
-**Variables:** `PUBLIC_API_URL`, `PUBLIC_APP_URL`
+Set GitHub **secrets** (`FASTAPI_CLOUD_*`, `VERCEL_*`) and **variables** (`PUBLIC_API_URL`, `PUBLIC_APP_URL`).
 
-Details: [docs/deployment.md](docs/deployment.md)
-
----
-
-## Security model
-
-```mermaid
-flowchart LR
-  T[Tenant spoofing] --> M1[JWT org from membership]
-  I[Prompt injection] --> M2[RBAC outside LLM]
-  D[Double mutation] --> M3[Idempotency keys]
-  L[Secret leak] --> M4[gitleaks + gitignore]
-  C[Cost abuse] --> M5[Daily quotas]
-```
-
-Full write-up: [docs/threat-model.md](docs/threat-model.md)
+→ [docs/deployment.md](docs/deployment.md)
 
 ---
 
-## Results
-
-```mermaid
-flowchart LR
-  subgraph Quality metrics
-    M1["24<br/>pytest tests"]
-    M2["60<br/>eval cases"]
-    M3["11<br/>ADRs"]
-    M4["12<br/>UI routes"]
-    M5["13<br/>graph nodes"]
-  end
-```
-
-| Metric | Value |
-| --- | --- |
-| Pytest | 24 passing |
-| Eval dataset | 60 cases · 6 categories |
-| CI | Green on main |
-| Documentation | Architecture + 11 ADRs + runbooks |
-
----
-
-## Documentation index
+## Documentation
 
 | Doc | Contents |
 | --- | --- |
-| [docs/architecture.md](docs/architecture.md) | C4 · agent · RAG diagrams |
-| [docs/threat-model.md](docs/threat-model.md) | Threats + mitigations |
-| [docs/deployment.md](docs/deployment.md) | Hosting setup |
-| [docs/adr/](docs/adr/) | Architecture decisions |
-| [docs/runbooks/](docs/runbooks/) | Incident runbooks |
-| [docs/demo-script.md](docs/demo-script.md) | Live demo script |
+| [architecture.md](docs/architecture.md) | C4 · workflows · RAG |
+| [threat-model.md](docs/threat-model.md) | Security analysis |
+| [deployment.md](docs/deployment.md) | Hosting guide |
+| [adr/](docs/adr/) | 11 architecture decisions |
+| [runbooks/](docs/runbooks/) | Incident runbooks |
+| [demo-script.md](docs/demo-script.md) | Live demo walkthrough |
 
 ---
+
+<div align="center">
 
 ## Author
 
 **Nikhil Maguwala**
 
-Full-stack build: system design, multi-tenant backend, LangGraph agent, RAG pipeline, human-in-the-loop approvals, durable jobs, ResolveAI frontend, evaluation harness, CI/CD, and technical documentation.
+System design · multi-tenant backend · LangGraph agent · RAG · HITL approvals · ResolveAI UI · evals · CI/CD
 
----
+<br />
 
-## License
+*Portfolio project — synthetic demo data only*
 
-See repository license file. Demo data is synthetic; do not use production PII.
+</div>

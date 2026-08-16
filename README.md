@@ -80,112 +80,81 @@ The **ResolveAI console** UI was designed with **[Stitch by Google Labs](https:/
 | **Implementation** | Next.js App Router · Tailwind CSS 4 · Geist font · Lucide icons |
 | **Screens** | Chat, inbox, knowledge, team invites, ops, evals, architecture view |
 
-```mermaid
-flowchart LR
-  STITCH["Stitch by Google<br/>UI prototypes"] --> NEXT["Next.js implementation"]
-  NEXT --> UI["ResolveAI console<br/>chat · inbox · admin"]
+**Design → code flow:**
 
-  classDef design fill:#fef3c7,stroke:#d97706
-  classDef code fill:#dbeafe,stroke:#2563eb
-  class STITCH design
-  class NEXT,UI code
+```
+  ┌──────────────────────┐      ┌──────────────────────┐      ┌─────────────────────────────┐
+  │  Stitch by Google    │ ───▶ │  Next.js build       │ ───▶ │  ResolveAI live console     │
+  │  UI prototypes       │      │  Tailwind + Geist    │      │  chat · inbox · admin       │
+  └──────────────────────┘      └──────────────────────┘      └─────────────────────────────┘
 ```
 
 ---
 
 ## How it works
 
-### The happy path (read this first)
+### The happy path (4 steps)
 
-```mermaid
-flowchart LR
-  classDef step fill:#eff6ff,stroke:#3b82f6,stroke-width:2px
-  classDef gate fill:#fef3c7,stroke:#d97706,stroke-width:2px
-  classDef done fill:#ecfdf5,stroke:#059669,stroke-width:2px
+| Step | Who | What happens |
+| :---: | --- | --- |
+| **1** | Customer | Asks a question — *"Why is my order late?"* |
+| **2** | Agent | Researches using **RAG** (policy) + **CRM/ERP** (order) + **carrier** (tracking) |
+| **3** | User | Sees an **approval card** in chat and approves or rejects the action |
+| **4** | System | Writes **once** to ERP (idempotent) · verifies · logs audit trail |
 
-  A["1. User asks<br/>Why is my order late?"]:::step
-  B["2. Agent researches<br/>RAG + CRM + carrier tools"]:::step
-  C["3. User approves<br/>Address change card"]:::gate
-  D["4. System writes once<br/>Idempotent ERP update"]:::done
-
-  A --> B --> C --> D
+```
+  ASK  ──────▶  RESEARCH  ──────▶  APPROVE  ──────▶  WRITE ONCE
+  user          RAG + tools         HITL gate          idempotent ERP
 ```
 
-### End-to-end request flow
+### Message flow (what happens on each chat send)
 
-```mermaid
-sequenceDiagram
-  autonumber
-  actor User
-  participant UI as Next.js UI
-  participant API as FastAPI
-  participant Agent as LangGraph
-  participant Data as Postgres + Qdrant
-
-  User->>UI: Send message
-  UI->>API: POST /conversations/.../messages
-  API->>Agent: Run agent turn
-  Agent->>Data: Policy RAG + order lookup
-  Agent-->>API: Reply + citations
-  API-->>UI: SSE tool progress + message
-  UI-->>User: Grounded answer
-
-  Note over User,Agent: If mutation needed
-  Agent-->>UI: Approval card
-  User->>UI: Approve
-  UI->>API: POST /approvals/.../approve
-  Agent->>API: Execute + verify + audit
-```
+| # | From | To | Action |
+| :---: | --- | --- | --- |
+| 1 | User | Web UI | Types message in `/chat` |
+| 2 | Web UI | FastAPI | `POST /conversations/{id}/messages` |
+| 3 | FastAPI | LangGraph | Runs agent turn |
+| 4 | Agent | Postgres + Qdrant | Loads order + searches policy |
+| 5 | Agent | FastAPI | Returns grounded reply + citations |
+| 6 | FastAPI | Web UI | Streams SSE events (tools, message, approval) |
+| 7 | User | Web UI | Approves mutation if required |
+| 8 | Agent | Mock ERP | Executes + verifies + audit |
 
 ---
 
 ## Architecture
 
-```mermaid
-flowchart TB
-  classDef fe fill:#ede9fe,stroke:#7c3aed
-  classDef be fill:#dbeafe,stroke:#2563eb
-  classDef store fill:#d1fae5,stroke:#059669
-  classDef ext fill:#f3f4f6,stroke:#6b7280
-
-  U([Users]) --> FE
-
-  subgraph FE [Frontend]
-    WEB[Next.js console on Vercel]:::fe
-  end
-
-  subgraph BE [Backend]
-    API[FastAPI REST + SSE]:::be
-    AG[LangGraph agent]:::be
-  end
-
-  subgraph STORE [Data layer]
-    PG[(Postgres)]:::store
-    VEC[(Qdrant vectors)]:::store
-  end
-
-  subgraph EXT [External]
-    LLM[LLM Groq Gemini]:::ext
-    TOOLS[Mock CRM ERP carrier]:::ext
-    MAIL[Email Brevo]:::ext
-  end
-
-  WEB -->|/api/v1 proxy| API
-  API --> AG
-  AG --> LLM
-  AG --> TOOLS
-  API --> PG
-  API --> VEC
-  API --> MAIL
-  WEB -. SSE .-> API
+```
+                         ┌─────────────────────────────────────────┐
+                         │           USERS (browser)               │
+                         └────────────────────┬────────────────────┘
+                                              │
+                         ┌────────────────────▼────────────────────┐
+  FRONTEND (Vercel)      │  Next.js ResolveAI console              │
+                         │  chat · inbox · knowledge · admin       │
+                         └────────────────────┬────────────────────┘
+                                              │  /api/v1 proxy + SSE
+                         ┌────────────────────▼────────────────────┐
+  BACKEND (FastAPI Cloud)│  FastAPI API                            │
+                         │  auth · conversations · approvals       │
+                         │  LangGraph agent · policy engine        │
+                         └───┬─────────┬─────────┬─────────┬───────┘
+                             │         │         │         │
+              ┌──────────────┘         │         │         └──────────────┐
+              ▼                        ▼         ▼                        ▼
+       ┌────────────┐           ┌──────────┐ ┌─────────┐           ┌────────────┐
+       │ Neon       │           │ Qdrant   │ │ Groq /  │           │ Mock CRM   │
+       │ Postgres   │           │ vectors  │ │ Gemini  │           │ ERP carrier│
+       └────────────┘           └──────────┘ └─────────┘           │ Brevo mail │
+                                                                    └────────────┘
 ```
 
-| Layer | Location | Role |
+| Layer | Folder / host | Role |
 | --- | --- | --- |
-| **UI** | `apps/web` | Chat, inbox, knowledge, admin screens |
-| **API** | `apps/api` | Auth, conversations, approvals, jobs |
+| **UI** | `apps/web` · Vercel | Chat, inbox, knowledge, admin screens |
+| **API** | `apps/api` · FastAPI Cloud | Auth, conversations, approvals, jobs |
 | **Agent** | `packages/agent` | LangGraph workflow + tool calls |
-| **RAG** | `packages/knowledge` | Ingest docs, search with tenant filter |
+| **RAG** | `packages/knowledge` | Ingest docs, tenant-filtered search |
 | **Integrations** | `packages/integrations` | HTTP clients for enterprise mocks |
 
 ---
@@ -194,20 +163,14 @@ flowchart TB
 
 ### Platform capabilities
 
-```mermaid
-flowchart TB
-  ROOT[ResolveAI platform]
+| Area | Includes |
+| --- | --- |
+| **Identity** | Signup · login · team invites · RBAC · tenant isolation tests |
+| **Agent** | 13-node LangGraph · tool calling · human approval · SSE streaming |
+| **Knowledge** | PDF upload · chunk · embed · citations in chat |
+| **Reliability** | Idempotency keys · job queue · audit log · usage quotas |
 
-  ROOT --> ID[Identity signup invites RBAC]
-  ROOT --> AG[Agent LangGraph tools approvals]
-  ROOT --> KN[Knowledge RAG citations]
-  ROOT --> RL[Reliability jobs audit quotas]
-
-  ID --- ID1[Tenant isolation tests]
-  AG --- AG1[SSE streaming]
-  KN --- KN1[PDF ingest pipeline]
-  RL --- RL1[Idempotency keys]
-```
+---
 
 ### Application screens
 
@@ -235,52 +198,34 @@ flowchart TB
 
 ## Agent pipeline
 
-The agent runs a **13-node LangGraph** workflow. Grouped for readability:
+The agent runs a **13-node LangGraph** workflow in three phases:
 
-```mermaid
-flowchart TB
-  classDef phase fill:#f8fafc,stroke:#64748b
+| Phase | Nodes | Purpose |
+| --- | --- | --- |
+| **1 — Understand** | Auth · classify intent · load customer · load order | Know who is asking and about which order |
+| **2 — Research** | RAG policy · carrier check · grounded reply | Answer with evidence and citations |
+| **3 — Act safely** | Validate · approve · execute · verify · or escalate | Mutations only after human approval |
 
-  subgraph P1 [Understand]
-    direction TB
-    A1[Auth + context]:::phase
-    A2[Classify intent]:::phase
-    A3[Load customer and order]:::phase
-  end
-
-  subgraph P2 [Research]
-    direction TB
-    B1[Retrieve policy RAG]:::phase
-    B2[Check carrier status]:::phase
-    B3[Write grounded reply]:::phase
-  end
-
-  subgraph P3 [Act safely]
-    direction TB
-    C1[Validate action]:::phase
-    C2{Needs mutation?}
-    C3[Request approval]:::phase
-    C4[Execute idempotent write]:::phase
-    C5[Verify result]:::phase
-  end
-
-  P1 --> P2 --> P3
-  C2 -->|no| OUT[Reply only]
-  C2 -->|yes| C3 --> C4 --> C5 --> OUT
-  C2 -->|unsafe| ESC[Escalate to inbox]
+```
+  UNDERSTAND  ──▶  RESEARCH  ──▶  ACT SAFELY
+  auth + order     RAG + carrier   approve → write → verify
+                                   └─ unsafe? → escalate to inbox
 ```
 
 ### Knowledge ingestion (RAG)
 
-```mermaid
-flowchart LR
-  U[Upload PDF] --> V[Validate file]
-  V --> E[Extract text]
-  E --> C[Chunk sections]
-  C --> M[Embed]
-  M --> Q[(Qdrant)]
-  Q --> R[Retrieve on question]
-  R --> S[Cite in answer]
+| Step | Action |
+| :---: | --- |
+| 1 | Upload PDF |
+| 2 | Validate MIME + checksum |
+| 3 | Extract text |
+| 4 | Chunk by section |
+| 5 | Embed vectors |
+| 6 | Store in Qdrant (with `organization_id`) |
+| 7 | Retrieve on user question → cite in answer |
+
+```
+  Upload → Validate → Extract → Chunk → Embed → Qdrant → Cite in chat
 ```
 
 ---
@@ -308,44 +253,28 @@ enterprise-ai-agent/
 
 ## Tech stack
 
-Full breakdown by layer — what runs where:
+**Stack at a glance:**
 
-```mermaid
-flowchart TB
-  subgraph DESIGN [Design]
-    ST[Stitch by Google]
-  end
+| Layer | Host | Key technologies |
+| --- | --- | --- |
+| **UI design** | [Stitch by Google](https://stitch.withgoogle.com) | Prototypes → Next.js implementation |
+| **Frontend** | Vercel | Next.js 16 · React 19 · TypeScript · Tailwind 4 |
+| **Backend** | FastAPI Cloud | FastAPI · LangGraph · SQLAlchemy 2 · Alembic |
+| **Database** | Neon | PostgreSQL · asyncpg |
+| **Vector DB** | Qdrant Cloud | Tenant-scoped RAG embeddings |
+| **LLM** | Groq + Gemini | Agent reasoning and tool use |
+| **Email** | Brevo | Team invites and notifications |
+| **CI/CD** | GitHub Actions | Test · lint · deploy |
 
-  subgraph FE [Frontend - Vercel]
-    NJS[Next.js 16 React 19]
-    TW[Tailwind CSS 4]
-  end
-
-  subgraph BE [Backend - FastAPI Cloud]
-    FA[FastAPI Uvicorn]
-    LG[LangGraph agent]
-  end
-
-  subgraph DATA [Data]
-    PG[(Neon Postgres)]
-    QD[(Qdrant Cloud)]
-    RD[(Upstash Redis)]
-  end
-
-  subgraph AI [AI and email]
-    GQ[Groq Gemini]
-    BR[Brevo email]
-  end
-
-  ST -. UI specs .-> NJS
-  NJS --> FA
-  FA --> LG
-  FA --> PG
-  FA --> QD
-  FA --> RD
-  LG --> GQ
-  FA --> BR
 ```
+  Stitch ──▶ Next.js (Vercel) ──▶ FastAPI (Cloud) ──▶ Neon Postgres
+                                        │                    │
+                                        ├── Qdrant (RAG)     │
+                                        ├── Groq / Gemini      │
+                                        └── Brevo email        │
+```
+
+Full breakdown by layer — what runs where:
 
 ### UI and design
 
@@ -507,22 +436,24 @@ Open **http://localhost:3000**
 
 ## Tests & quality
 
-```mermaid
-flowchart LR
-  PR[Pull request] --> CI[Lint + test + gitleaks]
-  MAIN[Merge to main] --> FULL[Full suite + evals]
-  FULL --> DEPLOY[Deploy Vercel + FastAPI Cloud]
-```
+**CI/CD pipeline:**
 
-```mermaid
-pie title Eval dataset by category
-  "Policy" : 20
-  "Orders" : 15
-  "Address change" : 10
-  "Prompt injection" : 5
-  "Missing evidence" : 5
-  "Dependency failure" : 5
-```
+| Stage | Trigger | Runs |
+| --- | --- | --- |
+| PR check | Pull request | Lint · pytest · gitleaks |
+| Main check | Merge to `main` | Full suite · 60 eval cases |
+| Deploy | After main passes | Vercel + FastAPI Cloud |
+
+**Eval dataset (60 cases):**
+
+| Category | Cases |
+| --- | ---: |
+| Policy / grounding | 20 |
+| Order / shipment | 15 |
+| Address change | 10 |
+| Prompt injection | 5 |
+| Missing evidence | 5 |
+| Dependency failure | 5 |
 
 | Metric | Count |
 | --- | ---: |

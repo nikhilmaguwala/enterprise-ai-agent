@@ -18,7 +18,7 @@ and **nothing mutates until a human approves it**.
 
 <br />
 
-**[What it does](#what-it-does)** · **[How it works](#how-it-works)** · **[Architecture](#architecture)** · **[Features](#features)** · **[Quick start](#quick-start)** · **[Docs](#documentation)**
+**[What it does](#what-it-does)** · **[UI design](#ui-design)** · **[How it works](#how-it-works)** · **[Architecture](#architecture)** · **[Tech stack](#tech-stack)** · **[Quick start](#quick-start)**
 
 </div>
 
@@ -35,6 +35,30 @@ ResolveAI is a **B2B customer-support platform** for e-commerce (demo domain: or
 | **Admin** | Invites teammates, uploads knowledge docs, monitors jobs and evals |
 
 Built and deployed end-to-end by **[Nikhil Maguwala](#author)** — backend, AI agent, frontend, CI/CD, evals, and docs.
+
+---
+
+## UI design
+
+The **ResolveAI console** UI was designed with **[Stitch by Google Labs](https://stitch.withgoogle.com)** — Google's AI-native design canvas — then implemented in code as a production Next.js app.
+
+| | |
+| --- | --- |
+| **Design tool** | [Stitch (Google Labs)](https://stitch.withgoogle.com) |
+| **Learn more** | [Google blog: Stitch AI UI design](https://blog.google/innovation-and-ai/models-and-research/google-labs/stitch-ai-ui-design/) |
+| **Implementation** | Next.js App Router · Tailwind CSS 4 · Geist font · Lucide icons |
+| **Screens** | Chat, inbox, knowledge, team invites, ops, evals, architecture view |
+
+```mermaid
+flowchart LR
+  STITCH["Stitch by Google<br/>UI prototypes"] --> NEXT["Next.js implementation"]
+  NEXT --> UI["ResolveAI console<br/>chat · inbox · admin"]
+
+  classDef design fill:#fef3c7,stroke:#d97706
+  classDef code fill:#dbeafe,stroke:#2563eb
+  class STITCH design
+  class NEXT,UI code
+```
 
 ---
 
@@ -253,13 +277,176 @@ enterprise-ai-agent/
 
 ## Tech stack
 
-| | Technologies |
+Full breakdown by layer — what runs where:
+
+```mermaid
+flowchart TB
+  subgraph DESIGN [Design]
+    ST[Stitch by Google]
+  end
+
+  subgraph FE [Frontend - Vercel]
+    NJS[Next.js 16 React 19]
+    TW[Tailwind CSS 4]
+  end
+
+  subgraph BE [Backend - FastAPI Cloud]
+    FA[FastAPI Uvicorn]
+    LG[LangGraph agent]
+  end
+
+  subgraph DATA [Data]
+    PG[(Neon Postgres)]
+    QD[(Qdrant Cloud)]
+    RD[(Upstash Redis)]
+  end
+
+  subgraph AI [AI and email]
+    GQ[Groq Gemini]
+    BR[Brevo email]
+  end
+
+  ST -. UI specs .-> NJS
+  NJS --> FA
+  FA --> LG
+  FA --> PG
+  FA --> QD
+  FA --> RD
+  LG --> GQ
+  FA --> BR
+```
+
+### UI and design
+
+| Tool | Purpose |
 | --- | --- |
-| **Backend** | Python 3.12 · FastAPI · SQLAlchemy 2 · Alembic · Pydantic v2 |
-| **Agent** | LangGraph · Groq · Gemini · SSE |
-| **Frontend** | Next.js 16 · React 19 · TypeScript · Tailwind · TanStack Query |
-| **Data** | Neon Postgres · Qdrant Cloud · optional Redis |
-| **Ops** | GitHub Actions · Vercel · FastAPI Cloud · Brevo email |
+| [Stitch by Google](https://stitch.withgoogle.com) | AI UI design and prototyping (ResolveAI theme) |
+| [Geist](https://vercel.com/font) | Typography |
+| [Lucide React](https://lucide.dev/) | Icons |
+| [Tailwind CSS 4](https://tailwindcss.com/) | Layout and styling |
+| [Mermaid](https://mermaid.js.org/) | In-app architecture diagram |
+
+### Frontend (`apps/web`)
+
+| Category | Technologies |
+| --- | --- |
+| **Framework** | Next.js 16.3 · React 19 · TypeScript 5 |
+| **Styling** | Tailwind CSS 4 · PostCSS · clsx |
+| **Data / forms** | TanStack Query 5 · Zod 4 |
+| **Content** | react-markdown · remark-gfm |
+| **Package manager** | pnpm 9 |
+| **Lint** | ESLint 9 · eslint-config-next |
+
+### Backend API (`apps/api`)
+
+| Category | Technologies |
+| --- | --- |
+| **Runtime** | Python 3.12 · uv |
+| **Web** | FastAPI · Uvicorn · sse-starlette |
+| **ORM / DB** | SQLAlchemy 2 async · asyncpg · Alembic |
+| **Validation** | Pydantic v2 · pydantic-settings · email-validator |
+| **Auth** | bcrypt · python-jose (JWT) |
+| **HTTP** | httpx · python-multipart |
+| **PDF / storage** | pypdf · firebase-admin |
+| **Resilience** | tenacity |
+| **Logging / metrics** | structlog · opentelemetry-api · prometheus-client |
+| **Lint / test** | ruff · mypy · pytest · pytest-asyncio |
+
+### AI and agent (`packages/agent`)
+
+| Category | Technologies |
+| --- | --- |
+| **Orchestration** | LangGraph · LangChain Core |
+| **Primary LLM** | Groq (`openai/gpt-oss-20b`) |
+| **Fallback LLM** | Google Gemini |
+| **Local dev LLM** | Ollama |
+| **Streaming** | Server-Sent Events to frontend |
+
+### Shared packages
+
+| Package | Role |
+| --- | --- |
+| `packages/domain` | Policy engine · intent classification · chunking |
+| `packages/knowledge` | RAG ingestion · Qdrant retrieval |
+| `packages/integrations` | CRM · ERP · carrier · ticketing HTTP clients |
+| `packages/observability` | Logging and metrics helpers |
+
+### Database
+
+| Store | Technology | Used for |
+| --- | --- | --- |
+| **Primary DB** | [Neon](https://neon.tech) PostgreSQL | Users, orgs, conversations, approvals, jobs, audit |
+| **Driver** | SQLAlchemy 2 + asyncpg | Async queries and migrations |
+| **Migrations** | Alembic | Schema versioning |
+| **Local dev** | Docker Postgres (optional) | `infra/docker-compose.yml` |
+
+### Vector database (RAG)
+
+| Store | Technology | Used for |
+| --- | --- | --- |
+| **Vector index** | [Qdrant Cloud](https://qdrant.tech) | Policy document embeddings |
+| **Client** | qdrant-client | Tenant-filtered hybrid search |
+| **Local dev** | Docker Qdrant (optional) | Compose stack |
+
+### Cache and queue (optional)
+
+| Store | Technology | Used for |
+| --- | --- | --- |
+| **Redis** | [Upstash Redis](https://upstash.com) REST | Rate limits · ephemeral locks |
+| **Jobs** | Postgres SKIP LOCKED | Durable background job queue |
+
+### Object storage
+
+| Backend | Technology | Used for |
+| --- | --- | --- |
+| **Production option** | Firebase Storage | Knowledge PDF uploads |
+| **Alternative** | Cloudflare R2 | Document storage |
+| **Local dev** | MinIO / filesystem | `OBJECT_STORAGE_BACKEND=filesystem` |
+
+### Email and auth
+
+| Service | Technology | Used for |
+| --- | --- | --- |
+| **Email** | [Brevo](https://www.brevo.com) | Team invites · notifications |
+| **Production auth** | JWT + bcrypt | Signup · login · API bearer tokens |
+| **Enterprise auth** | Auth0 OIDC (configured) | Optional SSO path |
+
+### Integrations (demo)
+
+| Service | Type | Purpose |
+| --- | --- | --- |
+| Mock CRM | HTTP (`services/mock-crm`) | Customer lookup |
+| Mock ERP | HTTP (`services/mock-erp`) | Orders · address changes |
+| Mock carrier | HTTP (`services/mock-carrier`) | Shipment tracking |
+| Mock ticketing | HTTP (`services/mock-ticketing`) | Escalations |
+| Embedded mocks | FastAPI routes | FastAPI Cloud deploy without extra containers |
+
+### Observability (optional)
+
+| Tool | Purpose |
+| --- | --- |
+| structlog | Structured JSON logs |
+| OpenTelemetry | Trace hooks |
+| Prometheus client | Metrics endpoints |
+| [Langfuse](https://langfuse.com) | LLM tracing |
+| Sentry | Error reporting |
+
+### DevOps, CI/CD, and hosting
+
+| Layer | Technologies |
+| --- | --- |
+| **CI** | GitHub Actions · gitleaks · ruff · pytest · ESLint |
+| **Deploy** | Vercel (frontend) · FastAPI Cloud (API) |
+| **Containers** | Docker · Docker Compose (local mocks + infra) |
+| **Monorepo** | uv workspace · `scripts/prepare-fastapi-cloud.sh` |
+
+### Quality and evals
+
+| Tool | Purpose |
+| --- | --- |
+| pytest (24 tests) | Unit + tenant isolation integration |
+| `evals/` (60 cases) | Deterministic graders · grounding · injection tests |
+| gitleaks | Secret scanning on PRs |
 
 ---
 

@@ -397,9 +397,33 @@ Set GitHub **secrets** (`FASTAPI_CLOUD_*`, `VERCEL_*`) and **variables** (`PUBLI
 
 ---
 
-<div align="center">
+## Public repository checklist
 
-## Author
+Audited before open-sourcing. **Current `main` is safe to publish.**
+
+| Check | Status |
+| --- | --- |
+| API keys / passwords in tracked files | **None found** |
+| Firebase JSON in git | **Never committed** |
+| `.env` gitignored | **Yes** |
+| gitleaks in CI | **Yes** (`ci.yml`) |
+| Tests on main | **24 passing** |
+| Personal infra IDs scrubbed from source | **Yes** |
+| Deploy secrets in GitHub Secrets only | **Yes** |
+
+**Gitignored locally (will NOT go public unless you force-add):**
+
+- `.env`, `.env.local`, `*firebase-adminsdk*.json`, `infra/secrets/`
+
+**Rotate after going public (precaution):**
+
+Neon DB password, Qdrant key, Groq key, Brevo key, Vercel/FastAPI tokens, Firebase service account, `DEV_AUTH_SECRET`, `INTERNAL_JOB_*`.
+
+**Old git history note:** earlier commits briefly contained a Firebase **project bucket name** and FastAPI **app id** (not private keys). If that concerns you, rotate Firebase credentials and create a new FastAPI Cloud app id.
+
+Demo data is synthetic. Do not put real customer PII in this project.
+
+---
 
 **Nikhil Maguwala**
 
@@ -407,6 +431,6 @@ System design · multi-tenant backend · LangGraph agent · RAG · HITL approval
 
 <br />
 
-*Portfolio project — synthetic demo data only*
+*Portfolio project — synthetic demo data only · [MIT License](LICENSE)*
 
 </div>

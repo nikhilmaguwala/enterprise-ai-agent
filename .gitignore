@@ -14,7 +14,7 @@ dist/
 build/
 *.egg-info/
 
-# Env & secrets
+# Env & secrets — never commit real values
 .env
 .env.local
 .env.*.local
@@ -22,6 +22,7 @@ build/
 *.pem
 credentials.json
 *firebase-adminsdk*.json
+**/firebase-adminsdk*.json
 infra/secrets/**
 !infra/secrets/.gitkeep
 

@@ -15,12 +15,43 @@ and **nothing mutates until a human approves it**.
 [![LangGraph](https://img.shields.io/badge/LangGraph-Agent-111827)](https://langchain-ai.github.io/langgraph/)
 [![Tests](https://img.shields.io/badge/tests-24_passing-success)](#tests--quality)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Live Demo](https://img.shields.io/badge/demo-live-059669?style=flat-square)](https://enterprise-ai-support-agent.vercel.app)
 
 <br />
 
-**[What it does](#what-it-does)** · **[UI design](#ui-design)** · **[How it works](#how-it-works)** · **[Architecture](#architecture)** · **[Tech stack](#tech-stack)** · **[Quick start](#quick-start)**
+### Live app
+
+| | URL |
+| --- | --- |
+| **Web app** | https://enterprise-ai-support-agent.vercel.app |
+| **API** | https://enterprise-ai-support-agent.fastapicloud.dev |
+| **API docs** | https://enterprise-ai-support-agent.fastapicloud.dev/docs |
+
+<br />
+
+**[About](#about)** · **[What it does](#what-it-does)** · **[UI design](#ui-design)** · **[How it works](#how-it-works)** · **[Architecture](#architecture)** · **[Tech stack](#tech-stack)** · **[Quick start](#quick-start)**
 
 </div>
+
+---
+
+## About
+
+| | |
+| --- | --- |
+| **Project** | ResolveAI — Enterprise AI Support Agent |
+| **Type** | Full-stack portfolio project (multi-tenant B2B support platform) |
+| **Author** | Nikhil Maguwala |
+| **UI design** | [Stitch by Google](https://stitch.withgoogle.com) |
+| **Repository** | https://github.com/nikhilmaguwala/enterprise-ai-agent |
+| **Live web app** | https://enterprise-ai-support-agent.vercel.app |
+| **Live API** | https://enterprise-ai-support-agent.fastapicloud.dev |
+
+**Short description (for GitHub About):**
+
+> Multi-tenant AI support agent with LangGraph, RAG, human-in-the-loop approvals, and a ResolveAI console. UI designed in Google Stitch. FastAPI + Next.js + Neon + Qdrant.
+
+**GitHub About → Website URL:** `https://enterprise-ai-support-agent.vercel.app`
 
 ---
 
